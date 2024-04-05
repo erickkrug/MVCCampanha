@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+
+<div class="row g-2" style="justify-content:space-between">
+    <div class="col-md-6">
+        <input type="file" class="form-control" id="inputGroupFile02" name="arquivo">
+    </div>
+    <div class="col-md-6">
+        <button type="button" class="btn btn-primary" id="btnImportar">Importar</button>
+    </div>
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+        $('#btnImportar').click(function () {
+            var formData = new FormData();
+            formData.append('arquivo', $('#inputGroupFile02')[0].files[0]);
+
+            $.ajax({
+                url: '/',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    // Manipule a resposta do servidor conforme necessário
+                    console.log(response);
+                },
+                error: function (xhr, status, error) {
+                    // Manipule erros conforme necessário
+                    console.error(error);
+                }
+            });
+        });
+    });
+</script>
+
