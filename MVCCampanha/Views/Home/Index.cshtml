@@ -7,16 +7,143 @@
 </head>
 
 
-<div class="row g-2" style="justify-content:space-between">
-    <div class="col-md-6">
+<div class="row g-4" style="justify-content:space-between">
+    <div class="col-md-1" style="width:50%">
         <input type="file" class="form-control" id="importfile" name="arquivo">
     </div>
-    <div class="col-md-6">
-        <button type="button" class="btn btn-primary" id="btnImportar">Importar</button>
+
+    <div class="col-md-1">
+        <button type="button" class="btn btn-primary" id="btnImportar" style="color:#ffff; background-color:#208B91">Importar</button>
+    </div>
+
+
+    <div class="col-md-5">
+        <select class="form-select" id="tipoimportacao" aria-label="Selecione o Tipo de importação">
+            <option selected>Selecione uma importação</option>
+            <option value="1">ID Usuario</option>
+            <option value="2">ID Dependente</option>
+            <option value="3"> Matricula </option>
+        </select>
+    </div>
+</div>
+@* ------- ------- *@
+
+<div class="row g-4">
+    <div class="col-md-2 g-4">
+        <label for="selectEmpresa" class="form-label">Empresa</label>
+        <select class="form-select" id="selectEmpresa">
+            <option selected>Choose...</option>
+            <option>...</option>
+        </select>
+    </div>
+
+    <div class="col-md-2 g-4">
+        <label for="dateDateatendimento" class="form-label">Data Atendimento</label>
+        <input type="date" class="form-control" id="dateDateatendimento">
+    </div>
+
+
+    <div class="col-2 g-4">
+        <label for="SelectUsuario" class="form-label">Usuario</label>
+        <select class="form-select" id="selectUsuario">
+            <option selected>Choose...</option>
+            <option>...</option>
+        </select>
+    </div>
+
+    <div class="col-2 g-4">
+        <label for="selectPrioridade" class="form-label">Prioridade</label>
+        <select class="form-select" id="selectPrioridade">
+            <option selected>Choose...</option>
+            <option>...</option>
+        </select>
+    </div>
+
+    <div class="col-md-2 g-4">
+        <label for="selectResultATD" class="form-label">Resultado Atendimento</label>
+        <select class="form-select" id="selectResultATD">
+            <option selected>Choose...</option>
+            <option>...</option>
+        </select>
+    </div>
+</div>
+
+@* ------- ------- *@
+<div class="row g-4">
+    <div class="col-md-2">
+        <label for="selectServico" class="form-label">Serviço</label>
+        <select class="form-select" id="selectServico">
+            <option selected>Choose...</option>
+            <option>...</option>
+        </select>
+    </div>
+
+    <div class="col-md-2">
+        <label for="selectMotivo" class="form-label">Motivo de</label>
+        <select class="form-select" id="selectMotivo">
+            <option selected>Choose...</option>
+            <option>...</option>
+        </select>
+    </div>
+
+    <div class="col-md-2">
+        <label for="selectCanalAtendimento" class="form-label">Canal Atendimento</label>
+        <select class="form-select" id="selectCanalAtendimento">
+            <option selected>Choose...</option>
+            <option>...</option>
+        </select>
+    </div>
+
+    <div class="col-md-2">
+        <label for="selectTipo" class="form-label">Tipo</label>
+        <select class="form-select" id="selectTipo">
+            <option selected>Choose...</option>
+            <option>...</option>
+        </select>
     </div>
 </div>
 
 
+@* ------- ------- *@
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <label for="FormRelato" class="form-label">Relato</label>
+        <textarea class="form-control" id="FormRelato" rows="3"></textarea>
+    </div>
+
+    <div class="col-md-6">
+        <label for="FormOrientacao" class="form-label">Orientação</label>
+        <textarea class="form-control" id="FormOrientacao" rows="3"></textarea>
+    </div>
+</div>
+
+<div class="row g-4">
+
+    <div class="col-md-6">
+        <label for="exampleFormControlTextarea1" class="form-label">Matriculas Não Encontradas</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+    </div>
+
+    <div class="col-4 mt-5">
+        <div class="form-label">
+            <label class="form-label" for="FuncInseridos">
+                Funcionarios Inseridos :
+            </label>
+            <div class="form-label">
+                <label class="form-label" for="AtendInseridos">
+                    Atendimentos Inseridos :
+                </label>
+            </div>
+        </div>
+    </div>
+
+</div>
+    <div class="mt-4">
+    <button type="submit" class="btn btn-primary btn-block" style="color:#ffff; background-color:#208B91">Copiar</button>
+
+    <button type="submit" class="btn btn-primary btn-block" style="color:#ffff; background-color:#208B91" >Adicionar</button>
+    </div>
 
 <script>
     $(document).ready(function () {
@@ -25,7 +152,7 @@
             formData.append('arquivo', $('#importfile')[0].files[0]);
 
             $.ajax({
-                url: '/ReadXlsx/Importar', 
+                url: '/ReadXlsx/Importar',
                 type: 'POST',
                 data: formData,
                 contentType: false,
@@ -39,5 +166,28 @@
             });
         });
     });
+
+        $('#selectEmpresa').change(function () {
+            var selectedOption = $(this).val();
+
+            // Enviar a requisição AJAX com os dados como texto
+            $.ajax({
+            url: 'Querys.cs/ListEmpresas',
+                method: 'POST',
+                contentType: 'application/json',
+                data: jsonData,
+                success: function (response) {
+                    console.log('Resposta do servidor:', response);
+                    alert('Resposta do servidor: ' + response);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Erro na requisição AJAX:', error);
+                    alert('Erro na requisição AJAX: ' + error);
+                }
+            });
+        });
+
+
+
 </script>
 
