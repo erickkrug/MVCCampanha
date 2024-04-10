@@ -13,6 +13,8 @@
         public int Motivo { get; set; }
         public int CanalAtend { get; set; }
         public int Tipo { get; set; }
+        public string Relato { get; set; }
+        public string Orientacao { get; set; }
 
     }
 }
