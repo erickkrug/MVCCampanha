@@ -22,6 +22,7 @@
             <option value="1">ID Usuario</option>
             <option value="2">ID Dependente</option>
             <option value="3"> Matricula </option>
+            <option value="4"> 1 </option>
         </select>
     </div>
 </div>
@@ -32,7 +33,7 @@
         <label for="selectEmpresa" class="form-label">Empresa</label>
         <select class="form-select" id="selectEmpresa">
             <option selected>Choose...</option>
-            <option>...</option>
+            <option>1</option>
         </select>
     </div>
 
@@ -46,7 +47,7 @@
         <label for="SelectUsuario" class="form-label">Usuario</label>
         <select class="form-select" id="selectUsuario">
             <option selected>Choose...</option>
-            <option>...</option>
+            <option>1</option>
         </select>
     </div>
 
@@ -54,7 +55,7 @@
         <label for="selectPrioridade" class="form-label">Prioridade</label>
         <select class="form-select" id="selectPrioridade">
             <option selected>Choose...</option>
-            <option>...</option>
+            <option>1</option>
         </select>
     </div>
 
@@ -62,7 +63,7 @@
         <label for="selectResultATD" class="form-label">Resultado Atendimento</label>
         <select class="form-select" id="selectResultATD">
             <option selected>Choose...</option>
-            <option>...</option>
+            <option>1</option>
         </select>
     </div>
 </div>
@@ -73,7 +74,7 @@
         <label for="selectServico" class="form-label">Serviço</label>
         <select class="form-select" id="selectServico">
             <option selected>Choose...</option>
-            <option>...</option>
+            <option>1</option>
         </select>
     </div>
 
@@ -81,7 +82,7 @@
         <label for="selectMotivo" class="form-label">Motivo de</label>
         <select class="form-select" id="selectMotivo">
             <option selected>Choose...</option>
-            <option>...</option>
+            <option>1</option>
         </select>
     </div>
 
@@ -89,7 +90,7 @@
         <label for="selectCanalAtendimento" class="form-label">Canal Atendimento</label>
         <select class="form-select" id="selectCanalAtendimento">
             <option selected>Choose...</option>
-            <option>...</option>
+            <option>1</option>
         </select>
     </div>
 
@@ -97,7 +98,7 @@
         <label for="selectTipo" class="form-label">Tipo</label>
         <select class="form-select" id="selectTipo">
             <option selected>Choose...</option>
-            <option>...</option>
+            <option>1</option>
         </select>
     </div>
 </div>
@@ -138,11 +139,11 @@
     </div>
 
 </div>
-    <div class="mt-4">
+<div class="mt-4">
     <button type="submit" class="btn btn-primary btn-block" style="color:#ffff; background-color:#208B91">Copiar</button>
 
-    <button type="submit" class="btn btn-primary btn-block" style="color:#ffff; background-color:#208B91" >Adicionar</button>
-    </div>
+    <button type="submit" class="btn btn-primary btn-block" style="color:#ffff; background-color:#208B91">Adicionar</button>
+</div>
 
 <script>
     $(document).ready(function () {
@@ -151,24 +152,24 @@
             formData.append('arquivo', $('#importfile')[0].files[0]);
 
             var data = {
-                TipoImportacao: $('#tipoimportacao').val(),
-                IdEmpresa: $('#selectEmpresa').val(),
+                TipoImportacao: +$('#tipoimportacao').val(),
+                IdEmpresa: +$('#selectEmpresa').val(),
                 DataAtendimento: $('#dateDateatendimento').val(),
-                IdUsuario: $('#selectUsuario').val(),
-                IdPrioridade: $('#selectPrioridade').val(),
-                ResultAtendimento: $('#selectResultATD').val(),
-                Servico: $('#selectServico').val(),
-                Motivo: $('#selectMotivo').val(),
-                CanalAtend: $('#selectCanalAtendimento').val(),
-                Tipo: $('#selectTipo').val(),
-                Relato: $('#FormRelato').val(),
-                Orientacao: $('#FormOrientacao').val()
+                IdUsuario: +$('#selectUsuario').val(),
+                IdPrioridade: +$('#selectPrioridade').val(),
+                ResultAtendimento: +$('#selectResultATD').val(),
+                Servico: +$('#selectServico').val(),
+                Motivo: +$('#selectMotivo').val(),
+                CanalAtend: +$('#selectCanalAtendimento').val(),
+                Tipo: +$('#selectTipo').val(),
+                Relato: +$('#FormRelato').val(),
+                Orientacao: +$('#FormOrientacao').val()
             }
-            
+
             formData.append('atendimento', JSON.stringify(data));
 
             $.ajax({
-                url: './ReadXlsx/Importar', // Replace with your server endpoint
+                url: './Atendimento/Importar', // Replace with your server endpoint
                 type: 'POST',
                 data: formData,
                 processData: false, // Prevent jQuery from processing the data
@@ -184,28 +185,91 @@
             });
 
 
+        }); // Função de click vem até aqui
+
+        $.ajax({
+            url: 'Querys/ListEmpresas',
+            method: 'POST',
+            contentType: 'application/json',
+            data: null,
+            success: function (response) {
+                // Put some logic here, a each to show and populate selects on front. ;p
+                var response = JSON.parse(response);
+                var select = $('#selectEmpresas');
+                select.empty();
+                response.forEach(function (empresa) {
+                    var option = $('<option>').text(empresa);
+                    select.append(option);
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('Erro na requisição AJAX:', error);
+                alert('Erro na requisição AJAX: ' + error);
+            }
+        });
+
+        $.ajax({
+            url: 'Querys.cs/InsertFuncionario',
+            method: 'POST',
+            contentType: 'application/json',
+            data: jsonData,
+            success: function (response) {
+                var response = JSON.parse(response);
+                var select = $('#selectUsuario');
+                select.empty();
+                response.forEach(function (empresa) {
+                    var option = $('<option>').text(empresa);
+                    select.append(option);
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('Erro na requisição AJAX:', error);
+                alert('Erro na requisição AJAX: ' + error);
+            }
+        });
+
+        $.ajax({
+            url: 'Querys.cs/InsertAtendimentos',
+            method: 'POST',
+            contentType: 'application/json',
+            data: jsonData,
+            success: function (response) {
+                var response = JSON.parse(response);
+                var select = $('#selectPrioridade');
+                select.empty();
+                response.forEach(function (empresa) {
+                    var option = $('<option>').text(empresa);
+                    select.append(option);
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('Erro na requisição AJAX:', error);
+                alert('Erro na requisição AJAX: ' + error);
+            }
+        });
+
+        $.ajax({
+            url: 'Querys.cs/InsertAtendimentos',
+            method: 'POST',
+            contentType: 'application/json',
+            data: jsonData,
+            success: function (response) {
+                var response = JSON.parse(response);
+                var select = $('#selectResultATD');
+                select.empty();
+                response.forEach(function (empresa) {
+                    var option = $('<option>').text(empresa);
+                    select.append(option);
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('Erro na requisição AJAX:', error);
+                alert('Erro na requisição AJAX: ' + error);
+            }
         });
     });
 
-        // $('#selectEmpresa').change(function () {
-        //     var selectedOption = $(this).val();
 
-        //     // Enviar a requisição AJAX com os dados como texto
-        //     $.ajax({
-        //     url: 'Querys.cs/ListEmpresas',
-        //         method: 'POST',
-        //         contentType: 'application/json',
-        //         data: jsonData,
-        //         success: function (response) {
-        //             console.log('Resposta do servidor:', response);
-        //             alert('Resposta do servidor: ' + response);
-        //         },
-        //         error: function (xhr, status, error) {
-        //             console.error('Erro na requisição AJAX:', error);
-        //             alert('Erro na requisição AJAX: ' + error);
-        //         }
-        //     });
-        // });
 
 
 

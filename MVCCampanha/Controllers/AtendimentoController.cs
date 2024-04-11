@@ -9,7 +9,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-public class ReadXlsxController : ControllerBase
+public class AtendimentoController : ControllerBase
 {
     [HttpPost]
     public IActionResult Importar()

@@ -1,89 +1,94 @@
 ﻿using Dapper;
 using MVCCampanha.Models;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 
 namespace MVCCampanha.Controllers
 {
-    public class Querys
+    public static class Querys
     {
-        private readonly IConfiguration _configuration;
-        private readonly SqlConnection _connection;
 
-        // Insere os valores do excel no banco
-        public void InsertFuncionario(string IdAtendimento)
+        public static void InsertFuncionario(string IdAtendimento)
         {
-            SqlCommand command = _connection.CreateCommand();
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "sp_campanha_funcionario_insert";
-            command.Parameters.AddWithValue("@Ids", IdAtendimento.ToString());
-            try
+            using (SqlConnection connection = new SqlConnection(Settings.SQLConnectionString))
             {
-                _connection.Open();
-                command.ExecuteNonQuery();
+                SqlCommand command = connection.CreateCommand();
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandText = "sp_campanha_funcionario_insert";
+                command.Parameters.AddWithValue("@Ids", IdAtendimento.ToString());
+                try
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
+                }
             }
-            catch (Exception ex)
-            {
-                throw;
-            }
-            finally
-            {
-                _connection.Close();
-            }
+
         }
 
 
-        public List<string> ListMatriculaInexistente()
+        public static List<string> ListMatriculaInexistente()
         {
-            try
+
+            using (SqlConnection connection = new SqlConnection(Settings.SQLConnectionString))
             {
-                using (SqlConnection connection = new SqlConnection(Settings.SQLConnectionString))
+                try
                 {
                     return connection.Query<string>(
                         @"select 
-							sq_titu
-						From TEMP_SQ_TITU
-						where id_funcionario is null")
+      	                sq_titu
+                        From TEMP_SQ_TITU
+                        where id_funcionario is null")
                         .ToList();
                 }
+                catch(Exception)
+                {
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
+                }
             }
-            catch (Exception)
-            {
 
-                throw;
-            }
-            finally
-            {
-                _connection.Close();
-            }
         }
 
         //Exclui os Ids dos Funcionario na tabela TAMP_SQ_TITU
-        public void DeleteFuncionario()
+        public static void DeleteFuncionario()
         {
-            try
+            using (SqlConnection connection = new SqlConnection(Settings.SQLConnectionString))
             {
-                using (SqlConnection conect = new SqlConnection(Settings.SQLConnectionString))
+                try
                 {
-                    SqlCommand comand = _connection.CreateCommand();
-                    comand.CommandType = CommandType.StoredProcedure;
-                    comand.CommandText = "delete from TEMP_SQ_TITU";
-                    _connection.Open();
-                    comand.ExecuteNonQuery();
+                SqlCommand comand = connection.CreateCommand();
+                comand.CommandType = CommandType.StoredProcedure;
+                comand.CommandText = "delete from TEMP_SQ_TITU";
+                connection.Open();
+                comand.ExecuteNonQuery();
+                }
+                catch
+                {
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
                 }
             }
-            catch (Exception ex)
-            {
-                throw;
-            }
-            finally
-            {
-                _connection.Close();
-            }
+
+
         }
 
         //Busca e retorna uma lista com as empresas
-        public List<DefaultObject> ListEmpresas()
+        public static List<DefaultObject> ListEmpresas()
         {
             List<DefaultObject> retorno = new List<DefaultObject>();
 
@@ -120,7 +125,7 @@ namespace MVCCampanha.Controllers
             return retorno;
         }
 
-        public List<DefaultObject> ListServicos()
+        public static List<DefaultObject> ListServicos()
         {
             List<DefaultObject> retorno = new List<DefaultObject>();
 
@@ -157,14 +162,14 @@ namespace MVCCampanha.Controllers
             return retorno;
         }
 
-        public List<DefaultObject> ListMotivoChamada(int IdServico)
+        public static List<DefaultObject> ListMotivoChamada(int IdServico)
         {
             List<DefaultObject> retorno = new List<DefaultObject>();
 
-            using (SqlConnection conect = new SqlConnection(Settings.SQLConnectionString))
+            using (SqlConnection connection = new SqlConnection(Settings.SQLConnectionString))
             {
 
-                SqlCommand comand = _connection.CreateCommand();
+                SqlCommand comand = connection.CreateCommand();
                 comand.CommandType = CommandType.StoredProcedure;
                 comand.CommandText = "sp_campanha_Motivo_list";
                 comand.Parameters.AddWithValue("@id", IdServico);
@@ -173,7 +178,7 @@ namespace MVCCampanha.Controllers
                 {
 
 
-                    _connection.Open();
+                    connection.Open();
                     reader = comand.ExecuteReader();
                     DataTable dt = new DataTable();
                     dt.Load(reader);
@@ -193,7 +198,7 @@ namespace MVCCampanha.Controllers
                 }
                 finally
                 {
-                    _connection.Close();
+                    connection.Close();
                     if (reader != null)
                     {
                         reader.Close();
@@ -204,7 +209,7 @@ namespace MVCCampanha.Controllers
 
         }
 
-        public List<DefaultObject> ListCanalAtendimento()
+        public static List<DefaultObject> ListCanalAtendimento()
         {
             List<DefaultObject> retorno = new List<DefaultObject>();
 
@@ -242,7 +247,7 @@ namespace MVCCampanha.Controllers
             return retorno;
         }
 
-        public List<DefaultObject> ListUsuario()
+        public static List<DefaultObject> ListUsuario()
         {
             List<DefaultObject> retorno = new List<DefaultObject>();
 
@@ -280,7 +285,7 @@ namespace MVCCampanha.Controllers
             return retorno;
         }
 
-        public int InsertAtendimentos(int EmpresaId, string Orientacao, string relato, DateTime DataAtendimento, int CanalAtendimentoId, int UsuarioId, int MotivoChamadaId, int TipoImportacao, bool TipoAtendimento, int ResultadoAtd, int Prioridade)
+        public static int InsertAtendimentos(int EmpresaId, string Orientacao, string relato, DateTime DataAtendimento, int CanalAtendimentoId, int UsuarioId, int MotivoChamadaId, int TipoImportacao, bool TipoAtendimento, int ResultadoAtd, int Prioridade)
         {
             int retorno = -1;
 
