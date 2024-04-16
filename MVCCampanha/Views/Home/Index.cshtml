@@ -18,22 +18,21 @@
 
     <div class="col-md-5">
         <select class="form-select" id="tipoimportacao" aria-label="Selecione o Tipo de importação">
-            <option selected>Selecione uma importação</option>
+            <option></option>
             <option value="1">ID Usuario</option>
             <option value="2">ID Dependente</option>
             <option value="3"> Matricula </option>
-            <option value="4"> 1 </option>
         </select>
     </div>
 </div>
+
 @* ------- ------- *@
 
 <div class="row g-4">
     <div class="col-md-2 g-4">
         <label for="selectEmpresa" class="form-label">Empresa</label>
         <select class="form-select" id="selectEmpresa">
-            <option selected>Choose...</option>
-            <option>1</option>
+            <option selected></option>
         </select>
     </div>
 
@@ -44,26 +43,31 @@
 
 
     <div class="col-2 g-4">
-        <label for="SelectUsuario" class="form-label">Usuario</label>
+        <label for="selectUsuario" class="form-label">Usuario</label>
         <select class="form-select" id="selectUsuario">
-            <option selected>Choose...</option>
-            <option>1</option>
+        
         </select>
     </div>
 
     <div class="col-2 g-4">
         <label for="selectPrioridade" class="form-label">Prioridade</label>
         <select class="form-select" id="selectPrioridade">
-            <option selected>Choose...</option>
-            <option>1</option>
+            <option selected>Selecione uma importação</option>
+            <option value="1">Crítico/Emergencial</option>
+            <option value="2">Moderado/Atenção</option>
+            <option value="3">Leve/Rotina</option>
         </select>
     </div>
 
     <div class="col-md-2 g-4">
         <label for="selectResultATD" class="form-label">Resultado Atendimento</label>
         <select class="form-select" id="selectResultATD">
-            <option selected>Choose...</option>
-            <option>1</option>
+            <option></option>
+            <option value="1">Falei Sobre o Problema</option>
+            <option value="2">Tentativa s/Sucesso</option>
+            <option value="3">Tel errado</option>
+            <option value="4">WP/Mail/Tel sem resposta</option>
+            <option value="5">WP/Mail/Tel respondido</option>
         </select>
     </div>
 </div>
@@ -73,32 +77,30 @@
     <div class="col-md-2">
         <label for="selectServico" class="form-label">Serviço</label>
         <select class="form-select" id="selectServico">
-            <option selected>Choose...</option>
-            <option>1</option>
+      
         </select>
     </div>
 
     <div class="col-md-2">
-        <label for="selectMotivo" class="form-label">Motivo de</label>
+        <label for="selectMotivo" class="form-label">Motivo de Chamada</label>
         <select class="form-select" id="selectMotivo">
-            <option selected>Choose...</option>
-            <option>1</option>
+         
         </select>
     </div>
 
     <div class="col-md-2">
         <label for="selectCanalAtendimento" class="form-label">Canal Atendimento</label>
         <select class="form-select" id="selectCanalAtendimento">
-            <option selected>Choose...</option>
-            <option>1</option>
+          
         </select>
     </div>
 
     <div class="col-md-2">
-        <label for="selectTipo" class="form-label">Tipo</label>
-        <select class="form-select" id="selectTipo">
-            <option selected>Choose...</option>
-            <option>1</option>
+        <label for="selectTipo" class="form-label">TipoAtendimento</label>
+        <select class="form-select" id="TipoAtendimento">
+            <option></option>
+            <option value="0">Ativo</option>
+            <option value="1">Receptivo</option>
         </select>
     </div>
 </div>
@@ -121,17 +123,17 @@
 <div class="row g-4">
 
     <div class="col-md-6">
-        <label for="exampleFormControlTextarea1" class="form-label">Matriculas Não Encontradas</label>
-        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+        <label for="matNaoEncontradas" class="form-label">Matriculas Não Encontradas</label>
+        <textarea class="form-control" id="matNaoEncontradas" rows="3"></textarea>
     </div>
 
     <div class="col-4 mt-5">
         <div class="form-label">
-            <label class="form-label" for="FuncInseridos">
+            <label class="form-label" for="FuncInseridos" id="FuncInseridos">
                 Funcionarios Inseridos :
             </label>
             <div class="form-label">
-                <label class="form-label" for="AtendInseridos">
+                <label class="form-label" for="AtendInseridos" id="AtendInseridos">
                     Atendimentos Inseridos :
                 </label>
             </div>
@@ -142,129 +144,157 @@
 <div class="mt-4">
     <button type="submit" class="btn btn-primary btn-block" style="color:#ffff; background-color:#208B91">Copiar</button>
 
-    <button type="submit" class="btn btn-primary btn-block" style="color:#ffff; background-color:#208B91">Adicionar</button>
+    <button type="submit" class="btn btn-primary btn-block" id="btnadicionardados" style="color:#ffff; background-color:#208B91">Adicionar</button>
 </div>
 
 <script>
-    $(document).ready(function () {
-        $('#btnImportar').click(function () {
-            var formData = new FormData();
-            formData.append('arquivo', $('#importfile')[0].files[0]);
+   
+    $.ajax({
+        //Chamar endpoit que irá listar tuas empresas
+        url: 'Chamadas/ListarEmpresas',
+        data: null,
+        contentType: false,
+        method: 'POST',
+        success: function (success) {
 
-            var data = {
-                TipoImportacao: +$('#tipoimportacao').val(),
-                IdEmpresa: +$('#selectEmpresa').val(),
-                DataAtendimento: $('#dateDateatendimento').val(),
-                IdUsuario: +$('#selectUsuario').val(),
-                IdPrioridade: +$('#selectPrioridade').val(),
-                ResultAtendimento: +$('#selectResultATD').val(),
-                Servico: +$('#selectServico').val(),
-                Motivo: +$('#selectMotivo').val(),
-                CanalAtend: +$('#selectCanalAtendimento').val(),
-                Tipo: +$('#selectTipo').val(),
-                Relato: +$('#FormRelato').val(),
-                Orientacao: +$('#FormOrientacao').val()
-            }
+            var html = '<option> </option>';
 
-            formData.append('atendimento', JSON.stringify(data));
+            $.each(success, function (index, empresa) {
+                html += '<option id="' + empresa.value + '">' + empresa.text + '</option>';
 
-            $.ajax({
-                url: './Atendimento/Importar', // Replace with your server endpoint
-                type: 'POST',
-                data: formData,
-                processData: false, // Prevent jQuery from processing the data
-                contentType: false, // Let the browser set the content type
-                success: function (response) {
-                    // Handle the server response (e.g., display a success message)
-                    console.log('File uploaded successfully:', response);
-                },
-                error: function (xhr, status, error) {
-                    // Handle errors (e.g., display an error message)
-                    console.error('Error uploading file:', error);
-                }
             });
 
+            $('#selectEmpresa').html(html)
+        },
+        error: function (error) {
 
-        }); // Função de click vem até aqui
+        }
+    })
+
+
+    $.ajax({
+        url: 'Chamadas/ListarServicos',
+        data: null,
+        contentType: false,
+        method: 'GET',
+        success: function (success) {
+            var html = '<option> </option>';
+            $.each(success, function (index, servico) {
+                html += '<option value="' + servico.value + '">' + servico.text + '</option>';
+            });
+            $('#selectServico').html(html);
+        },
+        error: function (error) {
+           
+        }
+    });
+
+    
+    // Muita maracutaia, select trocou o ID ficou, vai corinthians ;3
+    $('#selectServico').change(function () {
+        var selectedServicoId = +$(this).val(); // Peguei o valor desse tchola, agora é saber onde usar 💀
+
+        var data = {
+            idServico : selectedServicoId
+        }
+
 
         $.ajax({
-            url: 'Querys/ListEmpresas',
-            method: 'POST',
+            url: 'Chamadas/ListMotivoDe',
+            data: data, // Enviar o ID do serviço selecionado
             contentType: 'application/json',
-            data: null,
-            success: function (response) {
-                // Put some logic here, a each to show and populate selects on front. ;p
-                var response = JSON.parse(response);
-                var select = $('#selectEmpresas');
-                select.empty();
-                response.forEach(function (empresa) {
-                    var option = $('<option>').text(empresa);
-                    select.append(option);
+            method: 'GET',
+            success: function (success) {
+                var html = '<option> </option>';
+                $.each(success, function (index, motivo) {
+                    html += '<option value="' + motivo.value + '">' + motivo.text + '</option>';
                 });
+                $('#selectMotivo').html(html);
             },
-            error: function (xhr, status, error) {
-                console.error('Erro na requisição AJAX:', error);
-                alert('Erro na requisição AJAX: ' + error);
+            error: function (error) {
+                // Tratar erros, se necessário
             }
         });
+    });
 
+
+    $.ajax({
+        //Chamar endpoit que irá listar tuas empresas
+        url: 'Chamadas/ListarUsuarios',
+        data: null,
+        contentType: false,
+        method: 'POST',
+        success: function (success) {
+
+            var html = '<option> </option>';
+
+            $.each(success, function (index, usuario) {
+                html += '<option id="' + usuario.value + '">' + usuario.text + '</option>';
+
+            });
+
+            $('#selectUsuario').html(html)
+        },
+        error: function (error) {
+
+        }
+    })
+
+    $.ajax({
+        //Chamar endpoit que irá listar tuas empresas
+        url: 'Chamadas/ListCanalAtendimento',
+        data: null,
+        contentType: false,
+        method: 'POST',
+        success: function (success) {
+
+            var html = '<option> </option>';
+
+            $.each(success, function (index, atendimento) {
+                html += '<option id="' + atendimento.value + '">' + atendimento.text + '</option>';
+
+            });
+
+            $('#selectCanalAtendimento').html(html)
+        },
+        error: function (error) {
+
+        }
+    })
+
+
+    $('#btnadicionardados').click(function () {
+        // Dados genéricos para enviar para o controlador
+        var data = {
+
+            TipoImportacao: $('#tipoimportacao').val(),
+            EmpresaId: $('#selectEmpresa').val(),
+            DataAtendimento: $('#dateDateatendimento').val(),
+            UsuarioId: $('#selecUsuario').val(),
+            Prioridade: $('#selectPrioridade').val(),
+            ResultadoAtd: $('#selectResultATD').val(),
+            selectServico: $('#selectServico').val(),
+            MotivoChamadaId: $('#selectMotivo').val(),
+            CanalAtendimentoId: $('#selectCanalAtendimento').val(),
+            TipoAtendimento: $('#TipoAtendimento').val(),
+            relato: $('#FormRelato').val(),
+            Orientacao: $('#FormOrientacao').val(),
+            matNaoEncontradas: $('#matNaoEncontradas').val(),
+            FuncInseridos: $('#FuncInseridos').val(),
+            AtendInseridos: $('#AtendInseridos').val()
+
+        };
+
+        // Requisição AJAX para o controlador
         $.ajax({
-            url: 'Querys.cs/InsertFuncionario',
-            method: 'POST',
-            contentType: 'application/json',
-            data: jsonData,
+            url: 'Chamadas/InserirDados',
+            type: 'POST',
+            data: data,
             success: function (response) {
-                var response = JSON.parse(response);
-                var select = $('#selectUsuario');
-                select.empty();
-                response.forEach(function (empresa) {
-                    var option = $('<option>').text(empresa);
-                    select.append(option);
-                });
+                console.log('Requisição bem-sucedida:', response);
             },
             error: function (xhr, status, error) {
-                console.error('Erro na requisição AJAX:', error);
-                alert('Erro na requisição AJAX: ' + error);
-            }
-        });
-
-        $.ajax({
-            url: 'Querys.cs/InsertAtendimentos',
-            method: 'POST',
-            contentType: 'application/json',
-            data: jsonData,
-            success: function (response) {
-                var response = JSON.parse(response);
-                var select = $('#selectPrioridade');
-                select.empty();
-                response.forEach(function (empresa) {
-                    var option = $('<option>').text(empresa);
-                    select.append(option);
-                });
-            },
-            error: function (xhr, status, error) {
-                console.error('Erro na requisição AJAX:', error);
-                alert('Erro na requisição AJAX: ' + error);
-            }
-        });
-
-        $.ajax({
-            url: 'Querys.cs/InsertAtendimentos',
-            method: 'POST',
-            contentType: 'application/json',
-            data: jsonData,
-            success: function (response) {
-                var response = JSON.parse(response);
-                var select = $('#selectResultATD');
-                select.empty();
-                response.forEach(function (empresa) {
-                    var option = $('<option>').text(empresa);
-                    select.append(option);
-                });
-            },
-            error: function (xhr, status, error) {
-                console.error('Erro na requisição AJAX:', error);
-                alert('Erro na requisição AJAX: ' + error);
+                console.error('Erro na requisição:', error);
             }
         });
     });
@@ -272,6 +302,11 @@
 
 
 
-
 </script>
 
+
+
+
+
+
+@*  Blud i'm coocked idk how this project is working, scare asf 💀'  *@

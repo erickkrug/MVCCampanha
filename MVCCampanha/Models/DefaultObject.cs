@@ -1,4 +1,10 @@
-﻿namespace MVCCampanha.Models
+﻿using System.Reflection.Metadata;
+
+namespace MVCCampanha.Models
 {
-    public record DefaultObject(string Value, string Text);
+    public class DefaultObject
+    {
+        public string Value { get; set; }
+        public string Text { get; set; }
+    }
 }

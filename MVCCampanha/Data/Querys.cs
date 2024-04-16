@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.AspNetCore.Mvc;
 using MVCCampanha.Models;
 using System.Data;
 using System.Data.Common;
@@ -49,7 +50,7 @@ namespace MVCCampanha.Controllers
                         where id_funcionario is null")
                         .ToList();
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     throw;
                 }
@@ -61,6 +62,31 @@ namespace MVCCampanha.Controllers
 
         }
 
+        public static List<DefaultObject> MatriculasInexistentes()
+        {
+            List<DefaultObject> matriculas = new();
+            using (SqlConnection connection = new SqlConnection(Settings.SQLConnectionString))
+            {
+                try
+                {
+                    var response = connection.Query<DefaultObject>("select emp.empr_cd_empresa as 'Value', emp.empr_tx_nome_fantasia as 'Text' from empresa emp").ToList();
+                    matriculas = response;
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+            return matriculas;
+        }
+
+
+
+
         //Exclui os Ids dos Funcionario na tabela TAMP_SQ_TITU
         public static void DeleteFuncionario()
         {
@@ -68,11 +94,11 @@ namespace MVCCampanha.Controllers
             {
                 try
                 {
-                SqlCommand comand = connection.CreateCommand();
-                comand.CommandType = CommandType.StoredProcedure;
-                comand.CommandText = "delete from TEMP_SQ_TITU";
-                connection.Open();
-                comand.ExecuteNonQuery();
+                    SqlCommand comand = connection.CreateCommand();
+                    comand.CommandType = CommandType.StoredProcedure;
+                    comand.CommandText = "delete from TEMP_SQ_TITU";
+                    connection.Open();
+                    comand.ExecuteNonQuery();
                 }
                 catch
                 {
@@ -87,110 +113,44 @@ namespace MVCCampanha.Controllers
 
         }
 
-        //Busca e retorna uma lista com as empresas
-        public static List<DefaultObject> ListEmpresas()
+        public static List<DefaultObject> ListarEmpresas()
         {
-            List<DefaultObject> retorno = new List<DefaultObject>();
-
-            using (SqlConnection conect = new SqlConnection(Settings.SQLConnectionString))
+            List<DefaultObject> empresas = new();
+            using (SqlConnection connection = new SqlConnection(Settings.SQLConnectionString))
             {
-                SqlCommand comand = conect.CreateCommand();
-                comand.CommandType = CommandType.StoredProcedure;
-                comand.CommandText = "sp_campanha_empresa_list";
-
                 try
                 {
-                    conect.Open();
-                    SqlDataReader reader = comand.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        var emp = new DefaultObject(reader["empr_cd_empresa"].ToString(), reader["empr_tx_nome_fantasia"].ToString());
-                        //emp.Value = reader["empr_cd_empresa"].ToString();
-                        //emp.Text = reader["empr_tx_nome_fantasia"].ToString();
-                        retorno.Add(emp);
-                    }
-                    reader.Close(); // Fechar o leitor dentro do bloco "using" também
+                    var response = connection.Query<DefaultObject>("select emp.empr_cd_empresa as 'Value', emp.empr_tx_nome_fantasia as 'Text' from empresa emp").ToList();
+                    empresas = response;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     throw;
                 }
                 finally
                 {
-                    conect.Close();
+                    connection.Close();
                 }
-            } // A conexão será fechada automaticamente ao sair do bloco "using"
-
-            return retorno;
+            }
+            return empresas;
         }
+
+
+        /// <summary>
+        /// Trabalar aqui :
+        /// </summary>
+        /// <returns></returns>
+
 
         public static List<DefaultObject> ListServicos()
         {
-            List<DefaultObject> retorno = new List<DefaultObject>();
-
-            using (SqlConnection conect = new SqlConnection(Settings.SQLConnectionString))
-            {
-                SqlCommand comand = conect.CreateCommand();
-                comand.CommandType = CommandType.StoredProcedure;
-                comand.CommandText = "sp_campanha_servico_list";
-
-                try
-                {
-                    conect.Open();
-                    SqlDataReader reader = comand.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        var servico = new DefaultObject(reader["Id"].ToString(), reader["serv_tx_descricao"].ToString());
-                        //servico.Value = reader["Id"].ToString();
-                        //servico.Text = reader["serv_tx_descricao"].ToString();
-                        retorno.Add(servico);
-                    }
-                    reader.Close();
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
-                finally
-                {
-                    conect.Close();
-                }
-            }
-
-            return retorno;
-        }
-
-        public static List<DefaultObject> ListMotivoChamada(int IdServico)
-        {
-            List<DefaultObject> retorno = new List<DefaultObject>();
-
+            List<DefaultObject> servicos = new();
             using (SqlConnection connection = new SqlConnection(Settings.SQLConnectionString))
             {
-
-                SqlCommand comand = connection.CreateCommand();
-                comand.CommandType = CommandType.StoredProcedure;
-                comand.CommandText = "sp_campanha_Motivo_list";
-                comand.Parameters.AddWithValue("@id", IdServico);
-                IDataReader reader = null;
                 try
                 {
-
-
-                    connection.Open();
-                    reader = comand.ExecuteReader();
-                    DataTable dt = new DataTable();
-                    dt.Load(reader);
-
-                    foreach (DataRow dr in dt.Rows)
-                    {
-                        var emp = new DefaultObject(dr["moch_nm_motivoChamada"].ToString(), dr["moch_cd_motivoChamada"].ToString());
-                        //emp.Value = dr["moch_cd_motivoChamada"].ToString();
-                        //emp.Text = dr["moch_nm_motivoChamada"].ToString();
-                        retorno.Add(emp);
-                    }
-                    return retorno;
+                    var response = connection.Query<DefaultObject>("select serv.Id as 'Value', serv.serv_tx_descricao as 'Text' from servico serv ").ToList();
+                    servicos = response;
                 }
                 catch (Exception ex)
                 {
@@ -199,40 +159,62 @@ namespace MVCCampanha.Controllers
                 finally
                 {
                     connection.Close();
-                    if (reader != null)
-                    {
-                        reader.Close();
-                        reader = null;
-                    }
                 }
             }
-
+            return servicos;
         }
+
+        public static List<DefaultObject> ListMotivoDe(int idServico)
+        {
+            List<DefaultObject> motivo = new();
+            using (SqlConnection connection = new SqlConnection(Settings.SQLConnectionString))
+            {
+                try
+                {
+                    var query = @"select 
+	                                   moch.moch_cd_motivoChamada as 'Value', 
+	                                   moch_nm_motivoChamada as 'Text' 
+                                   from motivo_chamada moch 
+                                   where moch.serv_cd_servico = @idServico and
+	                                   moch.moch_in_ativo = 1 and 
+	                                   moch.moch_in_atende_pap = 1 and 
+	                                   moch.moch_in_atende_seguros = 0";
+
+                    var response = connection.Query<DefaultObject>(query, new
+                    {
+                        idServico
+                    }).ToList();
+                    motivo = response;
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+            return motivo;
+        }
+
+
+        /// <summary>
+        /// Trabalhar aqui
+        /// </summary>
+        /// <returns></returns>
+
+
 
         public static List<DefaultObject> ListCanalAtendimento()
         {
-            List<DefaultObject> retorno = new List<DefaultObject>();
-
+            List<DefaultObject> atendimento = new();
             using (SqlConnection connection = new SqlConnection(Settings.SQLConnectionString))
             {
-                SqlCommand command = connection.CreateCommand();
-                command.CommandType = CommandType.StoredProcedure;
-                command.CommandText = "sp_campanha_CanalAtencimento_list";
-
                 try
                 {
-                    connection.Open();
-                    SqlDataReader reader = command.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        var canalAtendimento = new DefaultObject(reader["caat_cd_canal_atendimento"].ToString(), reader["caat_nm_canalAtendimento"].ToString());
-                        //canalAtendimento.Value = reader["caat_cd_canal_atendimento"].ToString();
-                        //canalAtendimento.Text = reader["caat_nm_canalAtendimento"].ToString();
-                        retorno.Add(canalAtendimento);
-                    }
-
-                    reader.Close(); // Fechar o leitor dentro do bloco "using" também
+                    var response = connection.Query<DefaultObject>("select atd.caat_cd_canal_atendimento as 'Value', atd.caat_nm_canalAtendimento as 'Text' from canal_atendimento atd").ToList();
+                    atendimento = response;
                 }
                 catch (Exception ex)
                 {
@@ -242,35 +224,19 @@ namespace MVCCampanha.Controllers
                 {
                     connection.Close();
                 }
-            } // A conexão será fechada automaticamente ao sair do bloco "using"
-
-            return retorno;
+            }
+            return atendimento;
         }
 
-        public static List<DefaultObject> ListUsuario()
+        public static List<DefaultObject> ListarUsuarios()
         {
-            List<DefaultObject> retorno = new List<DefaultObject>();
-
+            List<DefaultObject> usuario = new();
             using (SqlConnection connection = new SqlConnection(Settings.SQLConnectionString))
             {
-                SqlCommand command = connection.CreateCommand();
-                command.CommandType = CommandType.StoredProcedure;
-                command.CommandText = "sp_campanha_usuario_list";
-
                 try
                 {
-                    connection.Open();
-                    SqlDataReader reader = command.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        var usuario = new DefaultObject(reader["usua_cd_usuario"].ToString(), reader["usua_tx_apelido"].ToString());
-                        //usuario.Value = reader["usua_cd_usuario"].ToString();
-                        //usuario.Text = reader["usua_tx_apelido"].ToString();
-                        retorno.Add(usuario);
-                    }
-
-                    reader.Close(); // Fechar o leitor dentro do bloco "using" também
+                    var response = connection.Query<DefaultObject>("select usr.usua_cd_usuario as 'Value', usr.usua_nm_usuario as 'Text' from usuario usr").ToList();
+                    usuario = response;
                 }
                 catch (Exception ex)
                 {
@@ -280,10 +246,35 @@ namespace MVCCampanha.Controllers
                 {
                     connection.Close();
                 }
-            } // A conexão será fechada automaticamente ao sair do bloco "using"
-
-            return retorno;
+            }
+            return usuario;
         }
+
+
+        public static List<DefaultObject> ResultadoAtd()
+        {
+            List<DefaultObject> resultado = new();
+            using (SqlConnection connection = new SqlConnection(Settings.SQLConnectionString))
+            {
+                try
+                {
+                    var response = connection.Query<DefaultObject>("select reatd.rela_cd_relatorio as 'Value', reatd.rela_tx_nome as 'Text' from relatorio reatd").ToList();
+                    resultado = response;
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+            return resultado;
+        }
+
+
+
 
         public static int InsertAtendimentos(int EmpresaId, string Orientacao, string relato, DateTime DataAtendimento, int CanalAtendimentoId, int UsuarioId, int MotivoChamadaId, int TipoImportacao, bool TipoAtendimento, int ResultadoAtd, int Prioridade)
         {
