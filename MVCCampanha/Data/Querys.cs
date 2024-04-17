@@ -35,7 +35,6 @@ namespace MVCCampanha.Controllers
 
         }
 
-
         public static List<string> ListMatriculaInexistente()
         {
 

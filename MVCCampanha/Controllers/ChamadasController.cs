@@ -63,8 +63,6 @@ namespace MVCCampanha.Controllers
             }
         }
 
-
-
         public IActionResult ListCanalAtendimento()
         {
             try
@@ -103,7 +101,5 @@ namespace MVCCampanha.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-
-
     }
 }

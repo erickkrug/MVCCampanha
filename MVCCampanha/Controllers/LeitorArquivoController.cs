@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MVCCampanha.Controllers;
 using MVCCampanha.Models;
 using OfficeOpenXml;
 using System;
@@ -9,7 +10,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-public class AtendimentoController : ControllerBase
+public class LeitorArquivoController : ControllerBase
 {
     [HttpPost]
     public IActionResult Importar()
@@ -17,12 +18,7 @@ public class AtendimentoController : ControllerBase
         List<string> ids = new List<string>();
         ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         var file = Request.Form.Files["arquivo"];
-
-        var jsonAtendeimento = Request.Form["atendimento"].ToString();
-
-        Atendimento atendimento = JsonSerializer.Deserialize<Atendimento>(jsonAtendeimento);
-
-
+        
         if (file == null)
         {
             return NotFound("Envie um Arquivo válido");
@@ -36,7 +32,6 @@ public class AtendimentoController : ControllerBase
 
                 int totalRows = worksheet.Dimension.End.Row;
 
-               
                 for (int rowNum = 1; rowNum <= totalRows; rowNum++)
                 {
                     var cell = worksheet.Cells[rowNum, 1]; 
@@ -51,16 +46,15 @@ public class AtendimentoController : ControllerBase
                         }
                     }
                 }
+                // Inserir a lista de ID's na proc TITU
+                var listaids = Querys.ListMatriculaInexistente();
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Erro ao extrair IDs do arquivo Excel: {ex.Message}");
         }
-
         return Ok();
     }
-
-
 }
 
