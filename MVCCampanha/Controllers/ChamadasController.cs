@@ -57,7 +57,7 @@ namespace MVCCampanha.Controllers
                 var result = Querys.ListMotivoDe(idServico);
                 return Ok(result);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
@@ -89,12 +89,41 @@ namespace MVCCampanha.Controllers
             }
         }
 
-        public IActionResult InserirDados(int EmpresaId, string Orientacao, string relato, DateTime DataAtendimento, int CanalAtendimentoId, int UsuarioId, int MotivoChamadaId, int TipoImportacao, bool TipoAtendimento, int ResultadoAtd, int Prioridade)
+        public IActionResult InserirDados(int EmpresaId, string Orientacao, string relato, DateTime DataAtendimento, int CanalAtendimentoId, int UsuarioId, int MotivoChamadaId, int TipoImportacao, bool TipoAtendimento, int ResultadoAtd, int Prioridade, int FuncInseridos)
         {
+            List<string> LstMatriculas = new();
+
             try
             {
                 var result = Querys.InsertAtendimentos(EmpresaId, Orientacao, relato, DataAtendimento, CanalAtendimentoId, UsuarioId, MotivoChamadaId, TipoImportacao, TipoAtendimento, ResultadoAtd, Prioridade);
-                return Ok(result);
+
+                if (result != -1)
+                {
+                    if (TipoImportacao == 2 && result == 0)
+                    {
+                        Querys.ListMatriculaInexistente().ForEach(item => LstMatriculas.Add(item));
+
+                        return StatusCode(500, LstMatriculas);
+                    }
+                    else if (TipoImportacao == 2 && result < FuncInseridos)
+                    {
+                        Querys.ListMatriculaInexistente().ForEach(item => LstMatriculas.Add(item));
+
+                        return StatusCode(200, LstMatriculas);
+                    }
+                    else if (result > 0)
+                    {
+                        return StatusCode(200, "Os atendimentos foram inseridos"); 
+                    }
+                    else
+                    {
+                        return StatusCode(500, "Verificar procedencia do erro");
+                    }
+                }
+                else
+                {
+                    return StatusCode(500, "Ocorreu um erro ao inserir os atrendimentos");
+                }
             }
             catch (Exception ex)
             {
@@ -103,3 +132,4 @@ namespace MVCCampanha.Controllers
         }
     }
 }
+;

@@ -18,7 +18,7 @@ public class LeitorArquivoController : ControllerBase
         List<string> ids = new List<string>();
         ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         var file = Request.Form.Files["arquivo"];
-        
+
         if (file == null)
         {
             return NotFound("Envie um Arquivo válido");
@@ -26,6 +26,9 @@ public class LeitorArquivoController : ControllerBase
         var stream = file.OpenReadStream();
         try
         {
+
+            int countId = 0;
+
             using (ExcelPackage excelPackage = new(stream))
             {
                 var worksheet = excelPackage.Workbook.Worksheets.First();
@@ -34,27 +37,35 @@ public class LeitorArquivoController : ControllerBase
 
                 for (int rowNum = 1; rowNum <= totalRows; rowNum++)
                 {
-                    var cell = worksheet.Cells[rowNum, 1]; 
+                    var cell = worksheet.Cells[rowNum, 1];
 
-                    if (cell.Value != null) 
+                    if (cell.Value != null)
                     {
-                        string ?cellValue = cell.Value.ToString();
+                        string? cellValue = cell.Value.ToString();
 
                         if (!string.IsNullOrEmpty(cellValue.Trim()))
                         {
-                            ids.Add(cellValue); 
+                            ids.Add(cellValue);
                         }
                     }
                 }
-                // Inserir a lista de ID's na proc TITU
-                var listaids = Querys.ListMatriculaInexistente();
+
+                ids.ForEach(id =>
+                {
+                    Querys.InsertFuncionario(id);
+                    countId++;
+                });
+
             }
+
+            return Ok(countId);
+
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Erro ao extrair IDs do arquivo Excel: {ex.Message}");
+            return StatusCode(500, "Erro ao extrair IDs do arquivo Excel");
         }
-        return Ok();
+        
     }
 }
 

@@ -32,7 +32,6 @@ namespace MVCCampanha.Controllers
                     connection.Close();
                 }
             }
-
         }
 
         public static List<string> ListMatriculaInexistente()
@@ -82,9 +81,6 @@ namespace MVCCampanha.Controllers
             }
             return matriculas;
         }
-
-
-
 
         //Exclui os Ids dos Funcionario na tabela TAMP_SQ_TITU
         public static void DeleteFuncionario()

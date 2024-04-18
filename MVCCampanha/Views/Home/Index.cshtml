@@ -6,17 +6,23 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
-<div class="row g-5" style="justify-content:space-between">
+<div class="row g-5" style="margin-top: 10px">
     <div class="col-md-1" style="width:50%">
         <input type="file" class="form-control" id="importfile" enctype="multipart/form-data" name="arquivo">
     </div>
 
-    <div class="col-md-1">
+    <div class="mt-4 col-md-1 p-4" style="margin-left:20px">
         <button type="button" class="btn btn-primary" id="btnImportar" style="color:#ffff; background-color:#208B91">Importar</button>
     </div>
 
+</div>
 
-    <div class="col-md-5">
+@* ------- ------- *@
+
+<div class="row g-4">
+
+    <div class="g-4 col-md-4" id="selectImportacao" style="margin-top:30px">
+        <label> Tipo Importação </label>
         <select class="form-select" id="tipoimportacao" aria-label="Selecione o Tipo de importação">
             <option></option>
             <option value="1">ID Usuario</option>
@@ -24,11 +30,7 @@
             <option value="3"> Matricula </option>
         </select>
     </div>
-</div>
 
-@* ------- ------- *@
-
-<div class="row g-4">
     <div class="col-md-2 g-4">
         <label for="selectEmpresa" class="form-label">Empresa</label>
         <select class="form-select" id="selectEmpresa">
@@ -41,14 +43,18 @@
         <input type="date" class="form-control" id="dateDateatendimento">
     </div>
 
-
-    <div class="col-2 g-4">
+    <div class="col-md-2 g-4">
         <label for="selectUsuario" class="form-label">Usuario</label>
         <select class="form-select" id="selectUsuario">
         </select>
     </div>
+</div>
 
-    <div class="col-2 g-4">
+@* ------- ------- *@
+
+<div class="row g-4">
+
+    <div class="col-md-2 g-4">
         <label for="selectPrioridade" class="form-label">Prioridade</label>
         <select class="form-select" id="selectPrioridade">
             <option selected>Selecione uma importação</option>
@@ -58,21 +64,6 @@
         </select>
     </div>
 
-    <div class="col-md-2 g-4">
-        <label for="selectResultATD" class="form-label">Resultado Atendimento</label>
-        <select class="form-select" id="selectResultATD">
-            <option></option>
-            <option value="1">Falei Sobre o Problema</option>
-            <option value="2">Tentativa s/Sucesso</option>
-            <option value="3">Tel errado</option>
-            <option value="4">WP/Mail/Tel sem resposta</option>
-            <option value="5">WP/Mail/Tel respondido</option>
-        </select>
-    </div>
-</div>
-
-@* ------- ------- *@
-<div class="row g-4">
     <div class="col-md-2">
         <label for="selectServico" class="form-label">Serviço</label>
         <select class="form-select" id="selectServico">
@@ -92,6 +83,12 @@
     </div>
 
     <div class="col-md-2">
+        <label for="resultadoAtendimento" class="form-label">Resultado Atendimento</label>
+        <select class="form-select" id="resultadoAtendimento">
+        </select>
+    </div>
+
+    <div class="col-md-2">
         <label for="selectTipo" class="form-label">TipoAtendimento</label>
         <select class="form-select" id="TipoAtendimento">
             <option></option>
@@ -100,7 +97,6 @@
         </select>
     </div>
 </div>
-
 
 @* ------- ------- *@
 
@@ -135,26 +131,25 @@
             </div>
         </div>
     </div>
-
 </div>
 
-
-
-<div class="mt-4">
+<div class="mt-4" id="btncopyAdd">
     <button type="submit" class="btn btn-primary btn-block" id="btncopiardados" style="color:#ffff; background-color:#208B91">Copiar</button>
-
     <button type="submit" class="btn btn-primary btn-block" id="btnadicionardados" style="color:#ffff; background-color:#208B91">Adicionar</button>
 </div>
-
-
 
 <script>
 
     $(document).ready(function () {
+
+        $('.row.g-4').hide();
+        $('#selectImportacao').hide();
+        $('#btncopyAdd').hide();
         $('#btnImportar').on('click', function () {
+
             // Obtém o tipo de importação selecionado
             var tipoImportacao = $('#tipoimportacao').val();
-                
+
             // Obtém o arquivo selecionado
             var fileInput = $('#importfile')[0].files[0];
 
@@ -163,7 +158,9 @@
                 alert('Por favor, selecione um arquivo.');
                 return;
             }
-
+            $('.row.g-4').show();
+            $('#selectImportacao').show();
+            $('#btncopyAdd').show();
             // Cria um objeto FormData para enviar os dados
             var formData = new FormData();
             formData.append('tipoImportacao', tipoImportacao);
@@ -178,11 +175,13 @@
                 contentType: false, // Não define o tipo de conteúdo (será multipart/form-data)
                 success: function (response) {
                     // Sucesso na requisição
-                    console.log('Importação realizada com sucesso.');
+                    $('#FuncInseridos').text('Funcionarios Inseridos :' + response)
+
                     // Faça o que for necessário com a resposta do servidor
                 },
                 error: function (xhr, status, error) {
                     // Erro na requisição
+                    alert('Erro ao importar arquivo');
                     console.error('Erro ao importar arquivo:', error);
                 }
             });
@@ -200,7 +199,7 @@
             var html = '<option> </option>';
 
             $.each(success, function (index, empresa) {
-                html += '<option id="' + empresa.value + '">' + empresa.text + '</option>';
+                html += '<option value="' + empresa.value + '">' + empresa.text + '</option>';
 
             });
 
@@ -210,7 +209,6 @@
 
         }
     })
-
 
     $.ajax({
         url: 'Chamadas/ListarServicos',
@@ -229,6 +227,22 @@
         }
     });
 
+    $.ajax({
+        url: 'Chamadas/ResultadoAtd',
+        data: null,
+        contentType: false,
+        method: 'GET',
+        success: function (success) {
+            var html = '<option> </option>';
+            $.each(success, function (index, ResultAtendimento) {
+                html += '<option value="' + ResultAtendimento.value + '">' + ResultAtendimento.text + '</option>';
+            });
+            $('#resultadoAtendimento').html(html);
+        },
+        error: function (error) {
+
+        }
+    })
 
     // Muita maracutaia, select trocou o ID ficou, vai corinthians ;3
     $('#selectServico').change(function () {
@@ -257,7 +271,6 @@
         });
     });
 
-
     $.ajax({
         //Chamar endpoit que irá listar tuas empresas
         url: 'Chamadas/ListarUsuarios',
@@ -269,7 +282,7 @@
             var html = '<option> </option>';
 
             $.each(success, function (index, usuario) {
-                html += '<option id="' + usuario.value + '">' + usuario.text + '</option>';
+                html += '<option value="' + usuario.value + '">' + usuario.text + '</option>';
 
             });
 
@@ -291,7 +304,7 @@
             var html = '<option> </option>';
 
             $.each(success, function (index, atendimento) {
-                html += '<option id="' + atendimento.value + '">' + atendimento.text + '</option>';
+                html += '<option value="' + atendimento.value + '">' + atendimento.text + '</option>';
 
             });
 
@@ -302,39 +315,15 @@
         }
     })
 
-
-    
-    // var arquivo = $('#importfile')[0].files[0];
-    // var fd = new FormData();
-    // fd.append('arquivo', arquivo); 
-    // fd.append('tipoImportacao', $('#tipoimportacao').val()); 
-
-    // $.ajax({
-    //     url: 'LeitorArquivo/Importar',
-    //     type: 'POST',
-    //     data: JSON.stringify(fd),
-    //     processData: false, // Não processar os dados (necessário com FormData)
-    //     contentType: 'application/json', // Não definir o tipo de conteúdo (necessário com FormData)
-    //     success: function (response) {
-    //         console.log('Sucesso, ID válido', response);
-    //     },
-    //     error: function (xhr, status, error) {
-    //         console.log('Requisição mal sucedida', error);
-    //     }
-    // });
-
-
-
-
     $('#btnadicionardados').click(function () {
         // Dados genéricos para enviar para o controlador
         var data = {
             TipoImportacao: $('#tipoimportacao').val(),
             EmpresaId: $('#selectEmpresa').val(),
             DataAtendimento: $('#dateDateatendimento').val(),
-            UsuarioId: $('#selecUsuario').val(),
+            UsuarioId: $('#selectUsuario').val(),
             Prioridade: $('#selectPrioridade').val(),
-            ResultadoAtd: $('#selectResultATD').val(),
+            ResultadoAtd: $('#resultadoAtendimento').val(),
             selectServico: $('#selectServico').val(),
             MotivoChamadaId: $('#selectMotivo').val(),
             CanalAtendimentoId: $('#selectCanalAtendimento').val(),
@@ -342,6 +331,7 @@
             relato: $('#FormRelato').val(),
             Orientacao: $('#FormOrientacao').val(),
             matNaoEncontradas: $('#matNaoEncontradas').val(),
+            FuncInseridos: +$('#FuncInseridos').val()
         };
 
         // Requisição AJAX para o controlador
@@ -350,19 +340,19 @@
             type: 'POST',
             data: data,
             success: function (response) {
-                console.log('Requisição bem-sucedida:', response);
+                //Meu elemento que tera as matriculas não encontradas
+                var matriculasNaoEncontradasElement = $('#matNaoEncontradas');
+
+                $.each(response, function (index, matricula) {
+                    //Vou adicionar as matriculas não encontradas dentro do meu elemento
+
+                })
+
+                alert('Importação realizada');
             },
             error: function (xhr, status, error) {
                 console.error('Erro na requisição:', error);
             }
         });
     });
-
 </script>
-
-
-
-
-
-
-@*  Blud i'm coocked idk how this project is working, scare asf 💀'  *@
