@@ -21,13 +21,11 @@ namespace MVCCampanha.Controllers
             }
         }
 
-
-
-        public IActionResult ListarServicos()
+        public IActionResult ListarServicos(int empresaId)
         {
             try
             {
-                var result = Querys.ListServicos();
+                var result = Querys.ListServicos(empresaId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -76,19 +74,6 @@ namespace MVCCampanha.Controllers
             }
         }
 
-        public IActionResult ResultadoAtd()
-        {
-            try
-            {
-                var result = Querys.ResultadoAtd();
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
-
         public IActionResult InserirDados(int EmpresaId, string Orientacao, string relato, DateTime DataAtendimento, int CanalAtendimentoId, int UsuarioId, int MotivoChamadaId, int TipoImportacao, bool TipoAtendimento, int ResultadoAtd, int Prioridade, int FuncInseridos)
         {
             List<string> LstMatriculas = new();
@@ -113,16 +98,16 @@ namespace MVCCampanha.Controllers
                     }
                     else if (result > 0)
                     {
-                        return StatusCode(200, "Os atendimentos foram inseridos"); 
+                        return StatusCode(200, LstMatriculas); 
                     }
                     else
                     {
-                        return StatusCode(500, "Verificar procedencia do erro");
+                        return StatusCode(200, LstMatriculas);
                     }
                 }
                 else
                 {
-                    return StatusCode(500, "Ocorreu um erro ao inserir os atrendimentos");
+                    return StatusCode(500, LstMatriculas);
                 }
             }
             catch (Exception ex)

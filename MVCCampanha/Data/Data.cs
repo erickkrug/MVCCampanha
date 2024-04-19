@@ -43,9 +43,9 @@ namespace MVCCampanha.Data
             return listEmpresas;
         }
 
-        public static List<DefaultObject> ListServico()
+        public static List<DefaultObject> ListServico(int empresaId)
         {
-            var listServico = Querys.ListServicos();
+            var listServico = Querys.ListServicos(empresaId);
             return listServico;
         }
 

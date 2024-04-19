@@ -85,6 +85,12 @@
     <div class="col-md-2">
         <label for="resultadoAtendimento" class="form-label">Resultado Atendimento</label>
         <select class="form-select" id="resultadoAtendimento">
+            <option></option>
+            <option value="1">Falei</option>
+            <option value="2">Tentativa s/sucesso</option>
+            <option value="3">Tel errado</option>
+            <option value="4">WP/Mail sem resp</option>
+            <option value="5">WP/Mail respondido</option>
         </select>
     </div>
 
@@ -121,9 +127,10 @@
 
     <div class="col-4 mt-5">
         <div class="form-label">
-            <label class="form-label" for="FuncInseridos" id="FuncInseridos">
+            <label class="form-label" id="FuncInseridosUi">
                 Funcionarios Inseridos :
             </label>
+            <input id="FuncInseridos" type="hidden" />
             <div class="form-label">
                 <label class="form-label" for="AtendInseridos" id="AtendInseridos">
                     Atendimentos Inseridos :
@@ -143,8 +150,8 @@
     $(document).ready(function () {
 
         $('.row.g-4').hide();
-        $('#selectImportacao').hide();
-        $('#btncopyAdd').hide();
+        $('#selectimportacao').hide();
+        $('#btncopyadd').hide();
         $('#btnImportar').on('click', function () {
 
             // Obtém o tipo de importação selecionado
@@ -175,7 +182,8 @@
                 contentType: false, // Não define o tipo de conteúdo (será multipart/form-data)
                 success: function (response) {
                     // Sucesso na requisição
-                    $('#FuncInseridos').text('Funcionarios Inseridos :' + response)
+                    $('#FuncInseridos').val(response);
+                    $('#FuncInseridosUi').text('Funcionarios Inseridos : ' + response);
 
                     // Faça o que for necessário com a resposta do servidor
                 },
@@ -210,66 +218,53 @@
         }
     })
 
-    $.ajax({
-        url: 'Chamadas/ListarServicos',
-        data: null,
-        contentType: false,
-        method: 'GET',
-        success: function (success) {
-            var html = '<option> </option>';
-            $.each(success, function (index, servico) {
-                html += '<option value="' + servico.value + '">' + servico.text + '</option>';
-            });
-            $('#selectServico').html(html);
-        },
-        error: function (error) {
-
-        }
-    });
-
-    $.ajax({
-        url: 'Chamadas/ResultadoAtd',
-        data: null,
-        contentType: false,
-        method: 'GET',
-        success: function (success) {
-            var html = '<option> </option>';
-            $.each(success, function (index, ResultAtendimento) {
-                html += '<option value="' + ResultAtendimento.value + '">' + ResultAtendimento.text + '</option>';
-            });
-            $('#resultadoAtendimento').html(html);
-        },
-        error: function (error) {
-
-        }
-    })
-
     // Muita maracutaia, select trocou o ID ficou, vai corinthians ;3
+    // Troca isso por isso : ListarEmpresas
+    // e faz uma request pro select serviço ai dentro ;3
+    $('#selectEmpresa').change(function () {
+        var selectedEmpresaId = $(this).val(); // ID da empresa selecionada
+
+        // Chamar AJAX para obter os serviços da empresa selecionada
+        $.ajax({
+            url: 'Chamadas/ListarServicos',
+            data: { empresaId: selectedEmpresaId }, // Enviar o ID da empresa
+            method: 'GET',
+            success: function (servicos) {
+                var html = '<option> </option>';
+                $.each(servicos, function (index, servico) {
+                    html += '<option value="' + servico.value + '">' + servico.text + '</option>';
+                });
+                $('#selectServico').html(html);
+            },
+            error: function (error) {
+                console.error('Erro ao carregar os serviços:', error);
+            }
+        });
+
+
     $('#selectServico').change(function () {
-        var selectedServicoId = +$(this).val(); // Peguei o valor desse tchola, agora é saber onde usar 💀
-
-        var data = {
-            idServico: selectedServicoId
-        }
-
+        var selectMotivo = $(this).val();
 
         $.ajax({
             url: 'Chamadas/ListMotivoDe',
-            data: data, // Enviar o ID do serviço selecionado
-            contentType: 'application/json',
+                data: { idServico: selectMotivo }, // Enviar o ID do serviço selecionado
             method: 'GET',
-            success: function (success) {
+            success: function (motivo) {
                 var html = '<option> </option>';
-                $.each(success, function (index, motivo) {
+                $.each(motivo, function (index, motivo) {
                     html += '<option value="' + motivo.value + '">' + motivo.text + '</option>';
                 });
                 $('#selectMotivo').html(html);
             },
             error: function (error) {
-                // Tratar erros, se necessário
+                console.error('Erro ao carregar os motivos:', error);
             }
         });
     });
+
+    });
+
+
 
     $.ajax({
         //Chamar endpoit que irá listar tuas empresas
@@ -332,20 +327,19 @@
             Orientacao: $('#FormOrientacao').val(),
             matNaoEncontradas: $('#matNaoEncontradas').val(),
             FuncInseridos: +$('#FuncInseridos').val()
-        };
+        }
 
-        // Requisição AJAX para o controlador
         $.ajax({
             url: 'Chamadas/InserirDados',
             type: 'POST',
             data: data,
             success: function (response) {
                 //Meu elemento que tera as matriculas não encontradas
-                var matriculasNaoEncontradasElement = $('#matNaoEncontradas');
-
+               
                 $.each(response, function (index, matricula) {
                     //Vou adicionar as matriculas não encontradas dentro do meu elemento
-
+         
+                    $('#matNaoEncontradas').val(matricula)
                 })
 
                 alert('Importação realizada');
@@ -354,5 +348,8 @@
                 console.error('Erro na requisição:', error);
             }
         });
+
+
     });
+
 </script>

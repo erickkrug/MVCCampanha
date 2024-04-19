@@ -137,14 +137,28 @@ namespace MVCCampanha.Controllers
         /// <returns></returns>
 
 
-        public static List<DefaultObject> ListServicos()
+        public static List<DefaultObject> ListServicos(int empresaId)
         {
             List<DefaultObject> servicos = new();
             using (SqlConnection connection = new SqlConnection(Settings.SQLConnectionString))
             {
                 try
                 {
-                    var response = connection.Query<DefaultObject>("select serv.Id as 'Value', serv.serv_tx_descricao as 'Text' from servico serv ").ToList();
+                    string query = @"select 
+	                                     serv.Id as 'Value',
+	                                     serv.serv_tx_descricao as 'Text'
+                                     from servico serv
+	                                     inner join ContratoServico cs on cs.Servico_Id = serv.Id
+	                                     inner join contrato ctr on ctr.cont_cd_contrato = cs.Contrato_Id
+                                     where ctr.emp_cd_empresa = @empresaId
+                                     group by serv.Id, serv.serv_tx_descricao
+                                     order by serv.serv_tx_descricao";
+
+
+                    var response = connection.Query<DefaultObject>(query, new
+                    {
+                        empresaId
+                    }).ToList();
                     servicos = response;
                 }
                 catch (Exception ex)
@@ -244,31 +258,6 @@ namespace MVCCampanha.Controllers
             }
             return usuario;
         }
-
-
-        public static List<DefaultObject> ResultadoAtd()
-        {
-            List<DefaultObject> resultado = new();
-            using (SqlConnection connection = new SqlConnection(Settings.SQLConnectionString))
-            {
-                try
-                {
-                    var response = connection.Query<DefaultObject>("select reatd.rela_cd_relatorio as 'Value', reatd.rela_tx_nome as 'Text' from relatorio reatd").ToList();
-                    resultado = response;
-                }
-                catch (Exception ex)
-                {
-                    throw;
-                }
-                finally
-                {
-                    connection.Close();
-                }
-            }
-            return resultado;
-        }
-
-
 
 
         public static int InsertAtendimentos(int EmpresaId, string Orientacao, string relato, DateTime DataAtendimento, int CanalAtendimentoId, int UsuarioId, int MotivoChamadaId, int TipoImportacao, bool TipoAtendimento, int ResultadoAtd, int Prioridade)
