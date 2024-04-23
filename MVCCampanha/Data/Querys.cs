@@ -83,19 +83,38 @@ namespace MVCCampanha.Controllers
         }
 
         //Exclui os Ids dos Funcionario na tabela TAMP_SQ_TITU
-        public static void DeleteFuncionario()
+        //public static void DeleteFuncionario()
+        //{
+        //    using (SqlConnection connection = new SqlConnection(Settings.SQLConnectionString))
+        //    {
+        //        try
+        //        {
+        //            SqlCommand comand = connection.CreateCommand();
+        //            comand.CommandType = CommandType.StoredProcedure;
+        //            comand.CommandText = "delete from TEMP_SQ_TITU";
+        //            connection.Open();
+        //            comand.ExecuteNonQuery();
+        //        }
+        //        catch
+        //        {
+        //            throw;
+        //        }
+        //        finally
+        //        {
+        //            connection.Close();
+        //        }
+        //    }
+        //}
+
+        public static void DeleteFunc()
         {
             using (SqlConnection connection = new SqlConnection(Settings.SQLConnectionString))
             {
                 try
                 {
-                    SqlCommand comand = connection.CreateCommand();
-                    comand.CommandType = CommandType.StoredProcedure;
-                    comand.CommandText = "delete from TEMP_SQ_TITU";
-                    connection.Open();
-                    comand.ExecuteNonQuery();
+                    var response = connection.Query<DefaultObject>("delete from TEMP_SQ_TITU").ToList();
                 }
-                catch
+                catch (Exception ex)
                 {
                     throw;
                 }
@@ -104,8 +123,6 @@ namespace MVCCampanha.Controllers
                     connection.Close();
                 }
             }
-
-
         }
 
         public static List<DefaultObject> ListarEmpresas()

@@ -14,7 +14,7 @@ public class LeitorArquivoController : ControllerBase
 {
     [HttpPost]
     public IActionResult Importar()
-    {
+     {
         List<string> ids = new List<string>();
         ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         var file = Request.Form.Files["arquivo"];
@@ -49,7 +49,7 @@ public class LeitorArquivoController : ControllerBase
                         }
                     }
                 }
-
+                Querys.DeleteFunc();
                 ids.ForEach(id =>
                 {
                     Querys.InsertFuncionario(id);

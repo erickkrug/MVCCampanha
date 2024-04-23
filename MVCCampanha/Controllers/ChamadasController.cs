@@ -77,7 +77,6 @@ namespace MVCCampanha.Controllers
         public IActionResult InserirDados(int EmpresaId, string Orientacao, string relato, DateTime DataAtendimento, int CanalAtendimentoId, int UsuarioId, int MotivoChamadaId, int TipoImportacao, bool TipoAtendimento, int ResultadoAtd, int Prioridade, int FuncInseridos)
         {
             List<string> LstMatriculas = new();
-
             try
             {
                 var result = Querys.InsertAtendimentos(EmpresaId, Orientacao, relato, DataAtendimento, CanalAtendimentoId, UsuarioId, MotivoChamadaId, TipoImportacao, TipoAtendimento, ResultadoAtd, Prioridade);
@@ -88,7 +87,7 @@ namespace MVCCampanha.Controllers
                     {
                         Querys.ListMatriculaInexistente().ForEach(item => LstMatriculas.Add(item));
 
-                        return StatusCode(500, LstMatriculas);
+                        return StatusCode(200, LstMatriculas);
                     }
                     else if (TipoImportacao == 2 && result < FuncInseridos)
                     {
@@ -117,4 +116,3 @@ namespace MVCCampanha.Controllers
         }
     }
 }
-;
