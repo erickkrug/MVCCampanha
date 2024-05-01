@@ -2,6 +2,8 @@
 using MVCCampanha.Models;
 using System.Data.SqlClient;
 using Dapper;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System;
 namespace MVCCampanha.Controllers
 {
     public class ChamadasController : Controller
@@ -77,36 +79,47 @@ namespace MVCCampanha.Controllers
         public IActionResult InserirDados(int EmpresaId, string Orientacao, string relato, DateTime DataAtendimento, int CanalAtendimentoId, int UsuarioId, int MotivoChamadaId, int TipoImportacao, bool TipoAtendimento, int ResultadoAtd, int Prioridade, int FuncInseridos)
         {
             List<string> LstMatriculas = new();
+            ResultMatricula resultMatricula = new ResultMatricula();
             try
             {
                 var result = Querys.InsertAtendimentos(EmpresaId, Orientacao, relato, DataAtendimento, CanalAtendimentoId, UsuarioId, MotivoChamadaId, TipoImportacao, TipoAtendimento, ResultadoAtd, Prioridade);
+                
+                //result == -1 : erro na importação
+                //result == 0 : nenhum funcionario inserido
+                //result > 0 : numero de funcionários inseridos
 
                 if (result != -1)
                 {
+                    resultMatricula.Result = result;
                     if (TipoImportacao == 2 && result == 0)
                     {
-                        Querys.ListMatriculaInexistente().ForEach(item => LstMatriculas.Add(item));
+                        // Houve falha, mas inseriu alguns atendimentos
+                        Querys.ListMatriculaInexistente().ForEach(item => resultMatricula.Matriculas.Add(item));
 
-                        return StatusCode(200, LstMatriculas);
+                        return StatusCode(200, resultMatricula);
                     }
                     else if (TipoImportacao == 2 && result < FuncInseridos)
                     {
-                        Querys.ListMatriculaInexistente().ForEach(item => LstMatriculas.Add(item));
 
-                        return StatusCode(200, LstMatriculas);
+                        Querys.ListMatriculaInexistente().ForEach(item => resultMatricula.Matriculas.Add(item));
+
+                        return StatusCode(200, resultMatricula);
                     }
                     else if (result > 0)
                     {
-                        return StatusCode(200, LstMatriculas); 
+                        // Os atendimentos foram inseridos
+                        return StatusCode(200, resultMatricula);
                     }
                     else
                     {
-                        return StatusCode(200, LstMatriculas);
+                        // Deu erro, nenhum atendimento feito
+                        return StatusCode(500, resultMatricula);
                     }
                 }
                 else
                 {
-                    return StatusCode(500, LstMatriculas);
+                    // É graxa é graxa
+                    return StatusCode(500, resultMatricula);
                 }
             }
             catch (Exception ex)

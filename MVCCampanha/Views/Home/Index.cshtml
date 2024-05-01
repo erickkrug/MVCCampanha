@@ -4,367 +4,413 @@
 
 
 
-    <head>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    </head>
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
 
-    <div class="row g-5" style="margin-top: 10px">
-        <div class="col-md-1" style="width:50%">
-            <input type="file" class="form-control" id="importfile" enctype="multipart/form-data" name="arquivo">
-        </div>
-
-        <div class="mt-4 col-md-1 p-4" style="margin-left:20px">
-            <button type="button" class="btn btn-primary" id="btnImportar" style="color:#ffff; background-color:#208B91">Importar</button>
-        </div>
+<div class="row g-5" style="margin-top: 10px">
+    <div class="col-md-1" style="width:50%">
+        <input type="file" class="form-control" id="importfile" name="arquivo" accept=".xlsx">
     </div>
 
-    <div class="row g-4">
-        <div class="g-4 col-md-4" id="selectImportacao" style="margin-top:30px">
-            <label> Tipo Importação </label>
-            <select class="form-select" id="tipoimportacao" aria-label="Selecione o Tipo de importação">
-                <option></option>
-                <option value="1">ID Usuario</option>
-                <option value="3">ID Dependente</option>
-                <option value="2"> Matricula </option>
-            </select>
-            <span class="field-validation-error" style="color:crimson">
-                <span> Campo Obrigatório </span>
-            </span>
-        </div>
+    <div class="mt-4 col-md-1 p-4">
+        <button type="button" class="btn btn-primary" id="btnImportar" style="color:#ffff; background-color:#208B91">Importar</button>
+    </div>
+</div>
 
-        <div class="col-md-2 g-4">
-            <label for="selectEmpresa" class="form-label">Empresa</label>
-            <select class="form-select" id="selectEmpresa">
-                <option selected></option>
-            </select>
-            <span class="field-validation-error" style="color:crimson">
-                <span> Campo Obrigatório </span>
-            </span>
-        </div>
-
-        <div class="col-md-2 g-4">
-            <label for="dateDateatendimento" class="form-label">Data Atendimento</label>
-            <input type="date" class="form-control" id="dateDateatendimento">
-            <span class="field-validation-error" style="color:crimson">
-                <span> Campo Obrigatório </span>
-            </span>
-        </div>
-
-        <div class="col-md-2 g-4">
-            <label for="selectUsuario" class="form-label">Usuario</label>
-            <select class="form-select" id="selectUsuario">
-            </select>
-            <span class="field-validation-error" style="color:crimson">
-                <span> Campo Obrigatório </span>
-            </span>
-        </div>
+<div class="row g-4">
+    <div class="g-4 col-md-4" id="selectImportacao" style="margin-top:30px">
+        <label> Tipo Importação </label>
+        <select class="form-select" id="tipoimportacao" aria-label="Selecione o Tipo de importação">
+            <option></option>
+            <option value="1">ID Usuario</option>
+            <option value="3">ID Dependente</option>
+            <option value="2"> Matricula </option>
+        </select>
+        <span class="field-validation-error" style="color:crimson">
+            <span> Campo Obrigatório </span>
+        </span>
     </div>
 
-    <div class="row g-4">
-        <div class="col-md-2 g-4">
-            <label for="selectPrioridade" class="form-label">Prioridade</label>
-            <select class="form-select" id="selectPrioridade">
-                <option selected>Selecione uma importação</option>
-                <option value="1">Crítico/Emergencial</option>
-                <option value="2">Moderado/Atenção</option>
-                <option value="3">Leve/Rotina</option>
-            </select>
-            <span class="field-validation-error" style="color:crimson">
-                <span> Campo Obrigatório </span>
-            </span>
-        </div>
-
-        <div class="col-md-2">
-            <label for="selectServico" class="form-label">Serviço</label>
-            <select class="form-select" id="selectServico">
-            </select>
-            <span class="field-validation-error" style="color:crimson">
-                <span> Campo Obrigatório </span>
-            </span>
-        </div>
-
-        <div class="col-md-2">
-            <label for="selectMotivo" class="form-label">Motivo de Chamada</label>
-            <select class="form-select" id="selectMotivo">
-            </select>
-        </div>
-
-        <div class="col-md-2">
-            <label for="selectCanalAtendimento" class="form-label">Canal Atendimento</label>
-            <select class="form-select" id="selectCanalAtendimento">
-            </select>
-        </div>
-
-        <div class="col-md-2">
-            <label for="resultadoAtendimento" class="form-label">Resultado Atendimento</label>
-            <select class="form-select" id="resultadoAtendimento">
-                <option></option>
-                <option value="1">Falei</option>
-                <option value="2">Tentativa s/sucesso</option>
-                <option value="3">Tel errado</option>
-                <option value="4">WP/Mail sem resp</option>
-                <option value="5">WP/Mail respondido</option>
-            </select>
-            <span class="field-validation-error" style="color:crimson">
-                <span> Campo Obrigatório </span>
-            </span>
-        </div>
-
-        <div class="col-md-2">
-            <label for="selectTipo" class="form-label">TipoAtendimento</label>
-            <select class="form-select" id="TipoAtendimento">
-                <option></option>
-                <option value="0">Ativo</option>
-                <option value="1">Receptivo</option>
-            </select>
-        </div>
+    <div class="col-md-2 g-4">
+        <label for="selectEmpresa" class="form-label">Empresa</label>
+        <select class="form-select" id="selectEmpresa">
+            <option selected></option>
+        </select>
+        <span class="field-validation-error" style="color:crimson">
+            <span> Campo Obrigatório </span>
+        </span>
     </div>
 
-    <div class="row g-4">
-        <div class="col-md-6">
-            <label for="FormRelato" class="form-label">Relato</label>
-            <textarea class="form-control" id="FormRelato" rows="3"></textarea>
-        </div>
-
-        <div class="col-md-6">
-            <label for="FormOrientacao" class="form-label">Orientação</label>
-            <textarea class="form-control" id="FormOrientacao" rows="3"></textarea>
-        </div>
+    <div class="col-md-2 g-4">
+        <label for="dateDateatendimento" class="form-label">Data Atendimento</label>
+        <input type="date" class="form-control" id="dateDateatendimento">
+        <span class="field-validation-error" style="color:crimson">
+            <span> Campo Obrigatório </span>
+        </span>
     </div>
 
-    <div class="row g-4">
-        <div class="col-md-6">
-            <label for="matNaoEncontradas" class="form-label">Matriculas Não Encontradas</label>
-            <textarea class="form-control" readonly="readonly" id="matNaoEncontradas" rows="3"></textarea>
-        </div>
+    <div class="col-md-2 g-4">
+        <label for="selectUsuario" class="form-label">Usuario</label>
+        <select class="form-select" id="selectUsuario">
+        </select>
+        <span class="field-validation-error" style="color:crimson">
+            <span> Campo Obrigatório </span>
+        </span>
+    </div>
+</div>
 
-        <div class="col-4 mt-5">
+<div class="row g-4">
+    <div class="col-md-2 g-4">
+        <label for="selectPrioridade" class="form-label">Prioridade</label>
+        <select class="form-select" id="selectPrioridade">
+            <option></option>
+            <option value="1">Crítico/Emergencial</option>
+            <option value="2">Moderado/Atenção</option>
+            <option value="3">Leve/Rotina</option>
+        </select>
+        <span class="field-validation-error" style="color:crimson">
+            <span> Campo Obrigatório </span>
+        </span>
+    </div>
+
+    <div class="col-md-2">
+        <label for="selectServico" class="form-label">Serviço</label>
+        <select class="form-select" id="selectServico">
+        </select>
+        <span class="field-validation-error" style="color:crimson">
+            <span> Campo Obrigatório </span>
+        </span>
+    </div>
+
+    <div class="col-md-2">
+        <label for="selectMotivo" class="form-label">Motivo de Chamada</label>
+        <select class="form-select" id="selectMotivo">
+        </select>
+        <span class="field-validation-error" style="color:crimson">
+            <span> Campo Obrigatório </span>
+        </span>
+    </div>
+
+    <div class="col-md-2">
+        <label for="selectCanalAtendimento" class="form-label">Canal Atendimento</label>
+        <select class="form-select" id="selectCanalAtendimento">
+        </select>
+        <span class="field-validation-error" style="color:crimson">
+            <span> Campo Obrigatório </span>
+        </span>
+    </div>
+
+    <div class="col-md-2">
+        <label for="resultadoAtendimento" class="form-label">Resultado Atendimento</label>
+        <select class="form-select" id="resultadoAtendimento">
+            <option></option>
+            <option value="1">Falei</option>
+            <option value="2">Tentativa s/sucesso</option>
+            <option value="3">Tel errado</option>
+            <option value="4">WP/Mail sem resp</option>
+            <option value="5">WP/Mail respondido</option>
+        </select>
+        <span class="field-validation-error" style="color:crimson">
+            <span> Campo Obrigatório </span>
+        </span>
+    </div>
+
+    <div class="col-md-2">
+        <label for="selectTipo" class="form-label">TipoAtendimento</label>
+        <select class="form-select" id="TipoAtendimento">
+            <option></option>
+            <option value="0">Ativo</option>
+            <option value="1">Receptivo</option>
+        </select>
+        <span class="field-validation-error" style="color:crimson">
+            <span> Campo Obrigatório </span>
+        </span>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <label for="FormRelato" class="form-label">Relato</label>
+        <textarea class="form-control" id="FormRelato" rows="3"></textarea>
+    </div>
+
+    <div class="col-md-6">
+        <label for="FormOrientacao" class="form-label">Orientação</label>
+        <textarea class="form-control" id="FormOrientacao" rows="3"></textarea>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <label for="matNaoEncontradas" class="form-label">Matriculas Não Encontradas</label>
+        <textarea class="form-control" readonly="readonly" id="matNaoEncontradas" rows="3"></textarea>
+    </div>
+
+    <div class="col-4 mt-5">
+        <div class="form-label">
+            <label class="form-label" id="FuncInseridosUi">
+                Funcionarios Inseridos :
+            </label>
+            <input id="FuncInseridos" type="hidden" />
             <div class="form-label">
-                <label class="form-label" id="FuncInseridosUi">
-                    Funcionarios Inseridos :
+                <label class="form-label" for="AtendInseridos" id="AtendInseridos">
+                    Atendimentos Inseridos :
                 </label>
-                <input id="FuncInseridos" type="hidden" />
-                <div class="form-label">
-                    <label class="form-label" for="AtendInseridos" id="AtendInseridos">
-                        Atendimentos Inseridos :
-                    </label>
-                </div>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="mt-4" id="btncopyAdd">
-        <button type="submit" class="btn btn-primary btn-block" id="btncopiardados" style="color:#ffff; background-color:#208B91">Copiar</button>
-        <button type="submit" class="btn btn-primary btn-block" id="btnadicionardados" style="color:#ffff; background-color:#208B91">Adicionar</button>
-    </div>
-        
+<div class="mt-4" id="btncopyAdd">
+    <button type="button" class="btn btn-primary btn-block" id="btnadicionardados" style="color: #fff; background-color: #208B91">Adicionar</button>
+    <button type="button" id="btncopiardados" class="btn btn-primary btn-block" data-bs-toggle="popover" data-bs-placement="right" data-bs-content="Copiado com sucesso!" style="color: #fff; background-color: #208B91">Copiar</button>
+</div>
+@*
+<button type="button" class="btn btn-secondary" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="right" data-bs-content="Right popover">
+    Popover on right
+</button>
+ *@
+
+<script>
+
+    $(document).ready(function () {
+        $('.field-validation-error').hide();
+        $('.row.g-4').hide();
+        $('#selectimportacao').hide();
+        $('#btncopiardados').hide();
+        $('#btnadicionardados').hide();
 
 
-    <script>
+        $('#btnImportar').on('click', function () {
+            var tipoImportacao = $('#tipoimportacao').val();
+            var fileInput = $('#importfile')[0].files[0];
 
-        $(document).ready(function () {
-            $('.field-validation-error').hide();
-            $('.row.g-4').hide();
-            $('#selectimportacao').hide();
-            $('#btncopyadd').hide();
+            if (!fileInput) {
+                alert('Por favor, selecione um arquivo.');
+                return;
+            }
+            $('.row.g-4').show();
+            $('#selectImportacao').show();
+            $('#btncopyAdd').show();
+            $('#btncopiardados').show();
+            $('#btnadicionardados').show();
+            var formData = new FormData();
+            formData.append('tipoImportacao', tipoImportacao);
+            formData.append('arquivo', fileInput);
 
-
-            $('#btnImportar').on('click', function () {
-                var tipoImportacao = $('#tipoimportacao').val();
-                var fileInput = $('#importfile')[0].files[0];
-
-                if (!fileInput) {
-                    alert('Por favor, selecione um arquivo.');
-                    return;
+            $.ajax({
+                url: '/LeitorArquivo/Importar',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    $('#FuncInseridos').val(response);
+                    $('#FuncInseridosUi').text('Funcionarios Inseridos : ' + response);
+                },
+                error: function (xhr, status, error) {
+                    alert('Erro ao importar arquivo');
+                    console.error('Erro ao importar arquivo:', error);
                 }
-                $('.row.g-4').show();
-                $('#selectImportacao').show();
-                $('#btncopyAdd').show();
-                var formData = new FormData();
-                formData.append('tipoImportacao', tipoImportacao);
-                formData.append('arquivo', fileInput);
-
-
-
-                $.ajax({
-                    url: '/LeitorArquivo/Importar',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (response) {
-                        $('#FuncInseridos').val(response);
-                        $('#FuncInseridosUi').text('Funcionarios Inseridos : ' + response);
-                    },
-                    error: function (xhr, status, error) {
-                        alert('Erro ao importar arquivo');
-                        console.error('Erro ao importar arquivo:', error);
-                    }
-                });
             });
         });
 
+        // Inicializar o popover
+        $('#btncopiardados').popover();
+
+        // Função para copiar texto quando o botão for clicado
+        $('#btncopiardados').click(function () {
+            var textarea = document.getElementById('matNaoEncontradas');
+            textarea.select();
+
+            var textToCopy = $('#matNaoEncontradas').val(); // Supondo que 'popoverBtn' seja o elemento do qual você deseja copiar o valor
+            navigator.clipboard.writeText(textToCopy)
+
+            // // Selecionar o texto no textarea
+            // // textarea.value = textToCopy;
+
+            // Executar o comando de cópia
+            try {
+                var successful = document.execCommand('copy');
+                var msg = successful ? 'Copiado com sucesso!' : 'Falha ao copiar';
+                $('#btncopiardados').attr('data-bs-content', msg).popover('show');
+            } catch (err) {
+                console.error('Erro ao copiar: ', err);
+                $('#btncopiardados').attr('data-bs-content', 'Erro ao copiar').popover('show');
+            }
+        });
+    });
+
+
+    $.ajax({
+        url: '../Chamadas/ListarEmpresas',
+        data: null,
+        contentType: false,
+        method: 'POST',
+        success: function (success) {
+
+            var html = '<option> </option>';
+
+            $.each(success, function (index, empresa) {
+                html += '<option value="' + empresa.value + '">' + empresa.text + '</option>';
+
+            });
+
+            $('#selectEmpresa').html(html)
+        },
+        error: function (error) {
+
+        }
+    })
+
+    $('#selectEmpresa').change(function () {
+        var selectedEmpresaId = $(this).val();
         $.ajax({
-            url: 'Chamadas/ListarEmpresas',
-            data: null,
-            contentType: false,
-            method: 'POST',
-            success: function (success) {
-
+            url: '../Chamadas/ListarServicos',
+            data: { empresaId: selectedEmpresaId },
+            method: 'GET',
+            success: function (servicos) {
                 var html = '<option> </option>';
-
-                $.each(success, function (index, empresa) {
-                    html += '<option value="' + empresa.value + '">' + empresa.text + '</option>';
-
+                $.each(servicos, function (index, servico) {
+                    html += '<option value="' + servico.value + '">' + servico.text + '</option>';
                 });
-
-                $('#selectEmpresa').html(html)
+                $('#selectServico').html(html);
             },
             error: function (error) {
-
+                console.error('Erro ao carregar os serviços:', error);
             }
-        })
+        });
 
-        $('#selectEmpresa').change(function () {
-            var selectedEmpresaId = $(this).val();
+        $('#selectServico').change(function () {
+            var selectMotivo = $(this).val();
+
             $.ajax({
-                url: 'Chamadas/ListarServicos',
-                data: { empresaId: selectedEmpresaId },
+                url: '../Chamadas/ListMotivoDe',
+                data: { idServico: selectMotivo },
                 method: 'GET',
-                success: function (servicos) {
+                success: function (motivo) {
                     var html = '<option> </option>';
-                    $.each(servicos, function (index, servico) {
-                        html += '<option value="' + servico.value + '">' + servico.text + '</option>';
+                    $.each(motivo, function (index, motivo) {
+                        html += '<option value="' + motivo.value + '">' + motivo.text + '</option>';
                     });
-                    $('#selectServico').html(html);
+                    $('#selectMotivo').html(html);
                 },
                 error: function (error) {
-                    console.error('Erro ao carregar os serviços:', error);
+                    console.error('Erro ao carregar os motivos:', error);
                 }
-            });
-
-            $('#selectServico').change(function () {
-                var selectMotivo = $(this).val();
-
-                $.ajax({
-                    url: 'Chamadas/ListMotivoDe',
-                    data: { idServico: selectMotivo },
-                    method: 'GET',
-                    success: function (motivo) {
-                        var html = '<option> </option>';
-                        $.each(motivo, function (index, motivo) {
-                            html += '<option value="' + motivo.value + '">' + motivo.text + '</option>';
-                        });
-                        $('#selectMotivo').html(html);
-                    },
-                    error: function (error) {
-                        console.error('Erro ao carregar os motivos:', error);
-                    }
-                });
             });
         });
+    });
 
-        $.ajax({
-            url: 'Chamadas/ListarUsuarios',
-            data: null,
-            contentType: false,
-            method: 'POST',
-            success: function (success) {
+    $.ajax({
+        url: '../Chamadas/ListarUsuarios',
+        data: null,
+        contentType: false,
+        method: 'POST',
+        success: function (success) {
 
-                var html = '<option> </option>';
+            var html = '<option> </option>';
 
-                $.each(success, function (index, usuario) {
-                    html += '<option value="' + usuario.value + '">' + usuario.text + '</option>';
-                });
-
-                $('#selectUsuario').html(html)
-            },
-            error: function (error) {
-
-            }
-        })
-
-        $.ajax({
-            url: 'Chamadas/ListCanalAtendimento',
-            data: null,
-            contentType: false,
-            method: 'POST',
-            success: function (success) {
-
-                var html = '<option> </option>';
-
-                $.each(success, function (index, atendimento) {
-                    html += '<option value="' + atendimento.value + '">' + atendimento.text + '</option>';
-
-                });
-
-                $('#selectCanalAtendimento').html(html)
-            },
-            error: function (error) {
-
-            }
-        })
-
-        $('#btnadicionardados').click(function () {
-
-            var selects = [
-                '#tipoimportacao',
-                '#selectEmpresa',
-                '#dateDateatendimento',
-                '#selectUsuario',
-                '#selectPrioridade',
-                '#selectServico',
-                '#selectMotivo',
-                '#selectCanalAtendimento',
-                '#resultadoAtendimento',
-                '#TipoAtendimento',
-                '#FormRelato',
-                'FormOrientacao'
-            ];
-
-            var isvalid = true;
-            $.each(selects, function (index, selectId) {
-                var value = $(selectId).val();
-                if (!value) {
-                    $(selectId).next('.field-validation-error').show();
-                    isValid = false;
-                } else {
-                    $(selectId).next('.field-validation-error').hide();
-                }
+            $.each(success, function (index, usuario) {
+                html += '<option value="' + usuario.value + '">' + usuario.text + '</option>';
             });
 
-            if (isvalid == true) {
-                var data = {
-                    TipoImportacao: $('#tipoimportacao').val(),
-                    EmpresaId: $('#selectEmpresa').val(),
-                    DataAtendimento: $('#dateDateatendimento').val(),
-                    UsuarioId: $('#selectUsuario').val(),
-                    Prioridade: $('#selectPrioridade').val(),
-                    ResultadoAtd: $('#resultadoAtendimento').val(),
-                    selectServico: $('#selectServico').val(),
-                    MotivoChamadaId: $('#selectMotivo').val(),
-                    CanalAtendimentoId: $('#selectCanalAtendimento').val(),
-                    TipoAtendimento: $('#TipoAtendimento').val(),
-                    relato: $('#FormRelato').val(),
-                    Orientacao: $('#FormOrientacao').val(),
-                    matNaoEncontradas: $('#matNaoEncontradas').val(),
-                    FuncInseridos: +$('#FuncInseridos').val()
-                }
+            $('#selectUsuario').html(html)
+        },
+        error: function (error) {
 
-                $.ajax({
-                    url: 'Chamadas/InserirDados',
-                    type: 'POST',
-                    data: data,
-                    success: function (response) {
-                        $('#matNaoEncontradas').val(response.join(','), ('<br>'))
-                        alert('Importação realizada');
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('Erro na requisição:', error);
-                    }
-                });
-                return isvalid;
+        }
+    })
+
+    $.ajax({
+        url: '../Chamadas/ListCanalAtendimento',
+        data: null,
+        contentType: false,
+        method: 'POST',
+        success: function (success) {
+
+            var html = '<option> </option>';
+
+            $.each(success, function (index, atendimento) {
+                html += '<option value="' + atendimento.value + '">' + atendimento.text + '</option>';
+
+            });
+
+            $('#selectCanalAtendimento').html(html)
+        },
+        error: function (error) {
+
+        }
+    })
+
+    $('#btnadicionardados').click(function () {
+
+        var selects = [
+            '#tipoimportacao',
+            '#selectEmpresa',
+            '#dateDateatendimento',
+            '#selectUsuario',
+            '#selectPrioridade',
+            '#selectServico',
+            '#selectMotivo',
+            '#selectCanalAtendimento',
+            '#resultadoAtendimento',
+            '#TipoAtendimento',
+            '#FormRelato',
+            'FormOrientacao'
+        ];
+
+        var isvalid = true;
+        $.each(selects, function (index, selectId) {
+            var value = $(selectId).val();
+            if (!value) {
+                $(selectId).next('.field-validation-error').show();
+                isValid = false;
+            } else {
+                $(selectId).next('.field-validation-error').hide();
             }
         });
 
-    </script>
+        if (isvalid == true) {
+            var data = {
+                TipoImportacao: $('#tipoimportacao').val(),
+                EmpresaId: $('#selectEmpresa').val(),
+                DataAtendimento: $('#dateDateatendimento').val(),
+                UsuarioId: $('#selectUsuario').val(),
+                Prioridade: $('#selectPrioridade').val(),
+                ResultadoAtd: $('#resultadoAtendimento').val(),
+                selectServico: $('#selectServico').val(),
+                MotivoChamadaId: $('#selectMotivo').val(),
+                CanalAtendimentoId: $('#selectCanalAtendimento').val(),
+                TipoAtendimento: $('#TipoAtendimento').val(),
+                relato: $('#FormRelato').val().trim(),
+                Orientacao: $('#FormOrientacao').val().trim(),
+                matNaoEncontradas: $('#matNaoEncontradas').val(),
+                FuncInseridos: +$('#FuncInseridos').val()
+            }
+
+            $.ajax({
+                url: '../Chamadas/InserirDados',
+                type: 'POST',
+                data: data,
+                success: function (response) {
+
+                    if (response.matriculas != null) {
+                        $('#matNaoEncontradas').val(response.matriculas.join(','), ('<br>'))
+                    }
+
+                    $('#AtendInseridos').text('Atendimentos Inseridos : ' + response.result)
+                    alert('Os atendimentos foram inseridos com sucesso.');
+                },
+                
+                error: function (xhr, status, error) {
+                    console.error('Erro na requisição:', error);
+                    alert('Houve um erro ao adicionar os dados, revise os dados inseridos.')
+                }
+            });
+            return isvalid;
+        }
+    });
+
+</script>

@@ -132,7 +132,7 @@ namespace MVCCampanha.Controllers
             {
                 try
                 {
-                    var response = connection.Query<DefaultObject>("select emp.empr_cd_empresa as 'Value', emp.empr_tx_nome_fantasia as 'Text' from empresa emp").ToList();
+                    var response = connection.Query<DefaultObject>("select emp.empr_cd_empresa as 'Value', emp.empr_tx_nome_fantasia as 'Text' from empresa emp order by 2").ToList();
                     empresas = response;
                 }
                 catch (Exception ex)
@@ -239,7 +239,7 @@ namespace MVCCampanha.Controllers
             {
                 try
                 {
-                    var response = connection.Query<DefaultObject>("select atd.caat_cd_canal_atendimento as 'Value', atd.caat_nm_canalAtendimento as 'Text' from canal_atendimento atd").ToList();
+                    var response = connection.Query<DefaultObject>("select atd.caat_cd_canal_atendimento as 'Value', atd.caat_nm_canalAtendimento as 'Text' from canal_atendimento atd order by 2").ToList();
                     atendimento = response;
                 }
                 catch (Exception ex)
@@ -261,7 +261,7 @@ namespace MVCCampanha.Controllers
             {
                 try
                 {
-                    var response = connection.Query<DefaultObject>("select usr.usua_cd_usuario as 'Value', usr.usua_nm_usuario as 'Text' from usuario usr").ToList();
+                    var response = connection.Query<DefaultObject>("select usr.usua_cd_usuario as 'Value', usr.usua_nm_usuario as 'Text' from usuario usr order by 2").ToList();
                     usuario = response;
                 }
                 catch (Exception ex)

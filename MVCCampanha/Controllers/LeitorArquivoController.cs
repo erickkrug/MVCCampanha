@@ -26,23 +26,17 @@ public class LeitorArquivoController : ControllerBase
         var stream = file.OpenReadStream();
         try
         {
-
             int countId = 0;
-
             using (ExcelPackage excelPackage = new(stream))
             {
                 var worksheet = excelPackage.Workbook.Worksheets.First();
-
                 int totalRows = worksheet.Dimension.End.Row;
-
                 for (int rowNum = 1; rowNum <= totalRows; rowNum++)
                 {
                     var cell = worksheet.Cells[rowNum, 1];
-
                     if (cell.Value != null)
                     {
                         string? cellValue = cell.Value.ToString();
-
                         if (!string.IsNullOrEmpty(cellValue.Trim()))
                         {
                             ids.Add(cellValue);
@@ -57,15 +51,12 @@ public class LeitorArquivoController : ControllerBase
                 });
 
             }
-
             return Ok(countId);
-
         }
         catch (Exception ex)
         {
             return StatusCode(500, "Erro ao extrair IDs do arquivo Excel");
         }
-        
     }
 }
 

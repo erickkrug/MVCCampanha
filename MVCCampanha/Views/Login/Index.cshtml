@@ -1,0 +1,140 @@
+﻿@{
+    Layout = null;
+
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Auster Assistant</title>
+    @* Jquery *@
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap.rtl.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap.rtl.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    @* <link href="~/Content/bootstrap.css" rel="stylesheet" />*@
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link href="~/css/Login/login.css" rel="stylesheet" />
+    <!-- iCheck -->
+
+    <style type="text/css">
+        /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#26edb3+0,169891+50,074770+100 */
+        .login-page {
+            background: #1b656a; /* Old browsers */
+            background: -moz-linear-gradient(top, #1b656a 0%,#175a5f 100%); /* FF3.6-15 */
+            background: -webkit-linear-gradient(top, #1b656a 0%,#175a5f 100%); /* Chrome10-25,Safari5.1-6 */
+            background: linear-gradient(to bottom, #1b656a 0%,#175a5f 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1b656a', endColorstr='#175a5f',GradientType=0 ); /* IE6-9 */
+        }
+
+            .login-page a, hover {
+                color: #fff;
+            }
+
+    </style>
+
+</head>
+
+@using (@Html.BeginForm())
+{
+
+
+    <style>
+        .form-group {
+            display: flex;
+            align-items: center;
+        }
+        .form-group .form-control-feedback {
+             margin-right: 10px; /* Ajuste a margem conforme necessário */
+        }
+    </style>
+
+    <body class="hold-transition login-page">
+
+        <div class="login-box">
+
+            <div class="login-logo">
+                <img src="~/content/logo_auster.png" />
+            </div>
+
+            <div class="row" style="display:flex; align-items:end; ">
+
+                <div class="login-box-body" style="background: rgba(255, 225, 225, 0); border: 1px solid; border-color:transparent; color:#fff">
+
+                    <div class="form-group has-feedback">
+                        <span class="ion-android-person ion-android-person form-control-feedback" style="background-color:transparent; color:white;"></span>
+                        @Html.TextBox("usuario", null, new { @class = "form-control usuario", @placeholder = "Usuário", @autocomplete = "off", @style = "background-color:transparent; border-bottom: 1px solid #337c81; border-top: 0; border-left: 0; border-right: 0; color:white;" })
+                    </div>
+
+                    <div class="form-group has-feedback">
+                        <span class="ion-android-lock ion-android-lock form-control-feedback" style="color:white;"></span>
+                        @Html.TextBox("senha", null, new { @type = "password", @class = "form-control senha", @placeholder = "Senha", @autocomplete = "off", @style = "background-color:transparent; border-bottom: 1px solid #337c81; border-top: 0; border-left: 0; border-right: 0; color:white" })
+                    </div>
+
+                    <div>
+                        <span style="color: #fff; font-family:Verdana; font-size:11px; margin-left:13%;" class="validacao">@ViewBag.Msg</span>
+                    </div>
+
+                    <div class="row">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <button type="button" id="btnEntrar" class="btn btn-primary btn-block btn-flat" style="background-color:#337C81 !important; height:56px; width:320px; border:none;">Acessar</button>
+                                <div id="divMayus" style="visibility:hidden">Caps Lock Ligado.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+}
+</html>
+
+@* <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+<script type="module" src="~/lib/bootstrap/dist/js/bootstrap.esm.min.js"></script>
+<script type="module" src="~/lib/bootstrap/dist/js/bootstrap.esm.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+ *@
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#btnEntrar').on('click', function () {
+            var data = {
+                Usuario: $('#usuario').val(),
+                Senha: $('#senha').val()
+            };
+
+            $.ajax({
+                url: 'Login/Login',
+                method: 'GET',
+                contentType: false,
+                data: data,
+                success: function (sucesso) {
+                    window.location = '/Home/Index';
+                },
+                error: function (erro) {
+                    // Tratamento de erro aqui, se necessário
+                }
+            });
+        });
+    });
+
+</script>
