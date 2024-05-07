@@ -402,6 +402,7 @@
 
                     $('#AtendInseridos').text('Atendimentos Inseridos : ' + response.result)
                     alert('Os atendimentos foram inseridos com sucesso.');
+                    location.reload();
                 },
                 
                 error: function (xhr, status, error) {
